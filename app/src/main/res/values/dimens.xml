@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="m4">4dp</dimen>
+    <dimen name="m8">8dp</dimen>
+    <dimen name="m12">12dp</dimen>
+    <dimen name="m16">16dp</dimen>
+    <dimen name="m20">20dp</dimen>
+    <dimen name="m24">24dp</dimen>
+    <dimen name="m28">28dp</dimen>
+    <dimen name="m32">32dp</dimen>
+    <dimen name="m36">36dp</dimen>
+    <dimen name="m40">40dp</dimen>
+    <dimen name="m44">44dp</dimen>
+    <dimen name="m48">48dp</dimen>
+    <dimen name="m52">52dp</dimen>
+    <dimen name="m56">56dp</dimen>
+    <dimen name="m60">60dp</dimen>
+    <dimen name="m64">64dp</dimen>
+    <dimen name="m68">68dp</dimen>
+    <dimen name="m72">72dp</dimen>
+    <dimen name="m80">80dp</dimen>
+    <dimen name="m128">128dp</dimen>
+
+    <dimen name="btn_height">68dp</dimen>
+
+    <dimen name="switch_track_width">50dp</dimen>
+    <dimen name="switch_track_height">24dp</dimen>
+    <dimen name="switch_radius">30dp</dimen>
+    <dimen name="switch_thumb_padding">2dp</dimen>
+
+</resources>

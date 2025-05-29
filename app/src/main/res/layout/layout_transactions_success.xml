@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/m16">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textSize="60sp"
+        app:fontFamily="@font/poppins_semi_bold"
+        tools:text="1.00" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/transaction_successful"
+        android:textSize="30sp"
+        app:fontFamily="@font/poppins_semi_bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m32"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/print_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/btn_height"
+            android:layout_weight="1"
+            android:background="@drawable/shape_secondary_btn">
+
+            <ImageView
+                android:layout_width="@dimen/m48"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/img_print"
+                app:tint="@color/primary" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/email_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginStart="@dimen/m16"
+            android:layout_weight="1"
+            android:background="@drawable/shape_secondary_btn">
+
+            <ImageView
+                android:layout_width="@dimen/m48"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/img_email"
+                app:tint="@color/primary" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/charge_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_marginTop="@dimen/m16"
+        android:background="@drawable/shape_primary_btn"
+        android:fontFamily="@font/poppins_semi_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/ok"
+        android:textColor="@color/bckg"
+        android:textSize="18sp" />
+
+
+</LinearLayout>

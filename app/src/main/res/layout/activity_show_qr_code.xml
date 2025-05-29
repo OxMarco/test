@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/m16">
+
+    <ImageView
+        android:id="@+id/trash"
+        android:layout_width="@dimen/m48"
+        android:layout_height="@dimen/m48"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/img_trash"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/primary" />
+
+    <ImageView
+        android:id="@+id/card"
+        android:layout_width="@dimen/m48"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/img_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/trash"
+        app:layout_constraintBottom_toBottomOf="@id/trash"
+        app:tint="@color/primary" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textSize="40sp"
+        app:fontFamily="@font/poppins_semi_bold"
+        app:layout_constraintBottom_toTopOf="@id/qr_code"
+        app:layout_constraintTop_toBottomOf="@id/trash"
+        tools:text="1.00" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_semi_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/add_description"
+        android:textColor="@color/small_txt"
+        app:layout_constraintTop_toBottomOf="@id/amount"
+        android:textSize="18sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tap_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m16"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/scan_to_pay"
+        android:textColor="@color/small_txt"
+        app:fontFamily="@font/poppins_semi_bold"
+        app:layout_constraintTop_toBottomOf="@id/qr_code" />
+
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_width="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_qr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        app:tint="@color/primary" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

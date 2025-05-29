@@ -1,0 +1,18 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    <item>-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="@color/dropdown_bckg" />-->
+<!--            <stroke-->
+<!--                android:width="1dp"-->
+<!--                android:color="@color/gray_D2D2D2" />-->
+<!--            <corners android:radius="@dimen/m8" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--    <item-->
+<!--        android:end="@dimen/m8"-->
+<!--        android:width="@dimen/m20"-->
+<!--        android:height="@dimen/m20"-->
+<!--        android:gravity="end|center_vertical">-->
+<!--        <bitmap android:src="@drawable/ic_spinner_arrow" />-->
+<!--    </item>-->
+</layer-list>

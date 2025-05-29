@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/m24">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:drawableStart="@drawable/img_logo"
+        android:drawablePadding="@dimen/m8"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/leantill"
+        android:textSize="20sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:layout_marginTop="@dimen/m32"
+        android:text="@string/login"
+        android:textSize="40sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_marginVertical="@dimen/m16"
+        android:background="@drawable/shape_secondary_btn"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/email_icon"
+            android:layout_width="@dimen/m20"
+            android:layout_height="@dimen/m20"
+            android:src="@drawable/img_email"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/check_icon"
+            android:layout_width="@dimen/m20"
+            android:layout_height="@dimen/m20"
+            android:src="@drawable/img_check"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/m40"
+            android:layout_marginStart="@dimen/m16"
+            android:background="@color/small_txt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/email_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/email_lbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m32"
+            android:includeFontPadding="false"
+            android:text="@string/email"
+            android:textColor="@color/small_txt"
+            app:layout_constraintBottom_toTopOf="@id/email"
+            app:layout_constraintStart_toEndOf="@id/email_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m32"
+            android:layout_marginEnd="@dimen/m16"
+            android:background="@null"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:hint="@string/enter_email"
+            android:includeFontPadding="false"
+            android:textColor="@color/primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/check_icon"
+            app:layout_constraintStart_toEndOf="@id/email_icon"
+            app:layout_constraintTop_toBottomOf="@id/email_lbl" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:id="@+id/send_code_btn"
+        android:background="@drawable/shape_primary_btn"
+        android:fontFamily="@font/poppins_semi_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/send_code"
+        android:textColor="@color/bckg"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m8"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="@dimen/m40"
+            android:layout_height="1dp"
+            android:background="@color/small_txt" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/m8"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/you_will_receive_a_code_to_sign_in"
+            android:textColor="@color/small_txt" />
+
+        <View
+            android:layout_width="@dimen/m40"
+            android:layout_height="1dp"
+            android:background="@color/small_txt" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

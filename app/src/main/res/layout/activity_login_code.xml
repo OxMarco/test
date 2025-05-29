@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/m24">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/login"
+        android:textSize="40sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/m8"
+        android:layout_marginTop="@dimen/m16"
+        android:includeFontPadding="false"
+        android:text="@string/code"
+        android:textColor="@color/small_txt"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <xyz.raincards.ui.customviews.CustomEnterDigitView
+            android:id="@+id/first_digit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <xyz.raincards.ui.customviews.CustomEnterDigitView
+            android:id="@+id/second_digit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <xyz.raincards.ui.customviews.CustomEnterDigitView
+            android:id="@+id/third_digit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <xyz.raincards.ui.customviews.CustomEnterDigitView
+            android:id="@+id/fourth_digit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <xyz.raincards.ui.customviews.CustomEnterDigitView
+            android:id="@+id/fifth_digit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <xyz.raincards.ui.customviews.CustomEnterDigitView
+            android:id="@+id/sixth_digit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m8"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="@dimen/m40"
+            android:layout_height="1dp"
+            android:background="@color/small_txt" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/m8"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/click_here_to_send_the_email_again"
+            android:textColor="@color/small_txt" />
+
+        <View
+            android:layout_width="@dimen/m40"
+            android:layout_height="1dp"
+            android:background="@color/small_txt" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/m8"
+        android:fontFamily="@font/poppins_semi_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/next_send_in_60s"
+        android:textColor="@color/small_txt" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m32"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/btn_height"
+            android:layout_weight="1"
+            android:background="@drawable/shape_secondary_btn"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/cancel"
+            android:textColor="@color/primary"
+            android:textSize="18sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/enter_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginStart="@dimen/m16"
+            android:layout_weight="1"
+            android:background="@drawable/shape_primary_btn"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/enter"
+            android:textColor="@color/bckg"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

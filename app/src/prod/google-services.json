@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "636822665995",
+    "project_id": "rainpos-prod",
+    "storage_bucket": "rainpos-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636822665995:android:dbca281816633c8201400e",
+        "android_client_info": {
+          "package_name": "xyz.raincards"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWZ54VKtKmwpQ0LLq55RTPE82HeBpIUls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

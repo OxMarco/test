@@ -1,0 +1,49 @@
+<resources>
+
+    <string name="error">Error</string>
+    <string name="browser_error">Browser error</string>
+    <string name="pick_image">Pick image</string>
+    <string name="response_is_null">response is null</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="error_message">"Error message: "</string>
+    <string name="please_enter_valid_email_address">Please enter valid email address</string>
+    <string name="login">Login</string>
+    <string name="send_code">Send code</string>
+    <string name="you_will_receive_a_code_to_sign_in">you will receive a code to sign in</string>
+    <string name="email">Email</string>
+    <string name="enter_email">Enter email</string>
+    <string name="leantill">leantill</string>
+    <string name="code">Code</string>
+    <string name="click_here_to_send_the_email_again">Click here to send the email again.</string>
+    <string name="next_send_in_60s">Next send in 60s...</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter">Enter</string>
+    <string name="euro">€</string>
+    <string name="add_description">+ add description</string>
+    <string name="charge">Charge</string>
+    <string name="_5">5%</string>
+    <string name="_10">10%</string>
+    <string name="custom_ntip">Custom\ntip</string>
+    <string name="no_tip">No tip</string>
+    <string name="custom_tip">custom tip</string>
+    <string name="payment_description">Payment Description</string>
+    <string name="ok">OK</string>
+    <string name="settings">Settings</string>
+    <string name="tip_screen">Tip Screen</string>
+    <string name="language">Language</string>
+    <string name="currency">Currency</string>
+    <string name="auto_print_receipt">Auto Print Receipt</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="terms_of_service">Terms of service</string>
+    <string name="view">view</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="tap_insert_or_swipe_to_pay">Tap, insert or swipe to pay</string>
+    <string name="processing">Processing...</string>
+    <string name="transaction_successful">Transaction Successful</string>
+    <string name="failed">Failed!</string>
+    <string name="cancel_payment">Cancel Payment?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="scan_to_pay">Scan to pay</string>
+
+</resources>

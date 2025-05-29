@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+    <style name="Base.Theme.Nexgo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:windowBackground">@color/bckg</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+    </style>
+
+    <style name="Theme.Nexgo" parent="Base.Theme.Nexgo" />
+
+    <style name="Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/m48</item>
+        <item name="android:textOn">""</item>
+        <item name="android:textOff">""</item>
+        <item name="thumbTint">@color/selector_switch_thumb_tint</item>
+        <item name="trackTint">@color/selector_switch_track_tint</item>
+        <item name="track">@drawable/switch_track</item>
+        <item name="android:thumb">@drawable/switch_thumb</item>
+        <!--        https://stackoverflow.com/questions/39206494/custom-switch-track-and-selector-size-not-working-below-21-api-->
+    </style>
+
+</resources>

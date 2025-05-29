@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/m16">
+
+    <ImageView
+        android:id="@+id/trash"
+        android:layout_width="@dimen/m48"
+        android:layout_height="@dimen/m48"
+        app:tint="@color/primary"
+        android:src="@drawable/img_trash"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_width="@dimen/m48"
+        android:layout_height="@dimen/m48"
+        android:src="@drawable/img_qr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/primary" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textSize="40sp"
+        app:fontFamily="@font/poppins_semi_bold"
+        app:layout_constraintBottom_toTopOf="@id/card"
+        app:layout_constraintTop_toBottomOf="@id/trash"
+        tools:text="1.00" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tap_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m16"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/tap_insert_or_swipe_to_pay"
+        android:textColor="@color/small_txt"
+        app:fontFamily="@font/poppins_semi_bold"
+        app:layout_constraintTop_toBottomOf="@id/card" />
+
+    <ImageView
+        android:id="@+id/card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/card"
+        app:tint="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

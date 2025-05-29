@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#000000</color>
+    <color name="accent">#00A6FF</color>
+    <color name="text">#000000</color>
+    <color name="bckg">#F6F6F6</color>
+    <color name="header">#000000</color>
+    <color name="small_txt">#9A9A9A</color>
+</resources>

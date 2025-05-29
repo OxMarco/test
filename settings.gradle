@@ -1,0 +1,2 @@
+rootProject.name = "RainPOS"
+include ':app'
