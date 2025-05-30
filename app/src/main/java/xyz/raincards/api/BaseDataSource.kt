@@ -1,10 +1,10 @@
 package xyz.raincards.api
 
 import com.google.gson.Gson
+import retrofit2.Response
 import xyz.raincards.AndroidApp
 import xyz.raincards.R
 import xyz.raincards.models.responses._base.ResponseError
-import retrofit2.Response
 
 abstract class BaseDataSource {
 

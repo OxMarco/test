@@ -44,7 +44,6 @@ class QRCodeActivity : BaseActivity() {
             desc = it
         }
 
-
         binding.apply {
             amount.text = total.withCurrency()
             card.setOnClickListener { finish() }

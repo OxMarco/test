@@ -1,7 +1,6 @@
 package xyz.raincards.ui._base
 
 import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View

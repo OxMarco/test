@@ -1,12 +1,12 @@
 package xyz.raincards.api
 
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.POST
 import xyz.raincards.models.requests.CodeRequest
 import xyz.raincards.models.requests.LoginRequest
 import xyz.raincards.models.responses.CodeResponse
 import xyz.raincards.models.responses.LoginResponse
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.POST
 
 interface Api {
 

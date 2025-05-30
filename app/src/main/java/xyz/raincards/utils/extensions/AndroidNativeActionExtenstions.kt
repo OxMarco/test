@@ -1,15 +1,13 @@
 package xyz.raincards.utils.extensions
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
-import xyz.raincards.R
 import androidx.core.net.toUri
+import xyz.raincards.R
 
 fun Activity.showToast(message: String?) {
     Toast.makeText(this, message ?: getString(R.string.error), Toast.LENGTH_LONG).show()

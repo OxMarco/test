@@ -65,9 +65,9 @@ android {
             minifyEnabled false
         }
         release {
-            manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
             firebaseCrashlytics {
-                mappingFileUploadEnabled true
+                mappingFileUploadEnabled false
             }
             minifyEnabled true
             shrinkResources true

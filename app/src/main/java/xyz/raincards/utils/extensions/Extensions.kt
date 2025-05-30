@@ -20,7 +20,7 @@ import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.Setup.test_deviceID
 
-fun String.withCurrency() = "$this${Setup.getCurrency()}"
+fun String.withCurrency() = "${Setup.getCurrency()}$this" // @todo invert if EUR
 
 fun Context.getDeviceID(): String {
     return if (BuildConfig.DEBUG) {
