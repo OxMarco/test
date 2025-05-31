@@ -38,15 +38,6 @@
             app:fontFamily="@font/poppins_semi_bold"
             tools:text="1.00" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m4"
-            android:includeFontPadding="false"
-            android:text="@string/euro"
-            android:textSize="40sp"
-            app:fontFamily="@font/poppins_semi_bold" />
-
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"

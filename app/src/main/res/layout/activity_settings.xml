@@ -18,15 +18,17 @@
 
     <ImageView
         android:id="@+id/back"
-        android:layout_width="@dimen/m36"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="48dp"
         android:adjustViewBounds="true"
         android:padding="@dimen/m12"
         android:scaleType="fitXY"
-        android:src="@drawable/img_back"
+        android:src="@drawable/img_back_day"
+        android:tint="@color/primary"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="@id/title"
-        app:layout_constraintTop_toTopOf="@id/title" />
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -69,6 +71,15 @@
                     android:layout_height="@dimen/m32"
                     android:layout_marginTop="@dimen/m32"
                     android:gravity="center_vertical|end"
+                    android:text="@string/auto_print_receipt"
+                    android:textColor="@color/small_txt"
+                    android:textSize="24sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/m32"
+                    android:layout_marginTop="@dimen/m32"
+                    android:gravity="center_vertical|end"
                     android:text="@string/language"
                     android:textColor="@color/small_txt"
                     android:textSize="24sp" />
@@ -87,7 +98,7 @@
                     android:layout_height="@dimen/m32"
                     android:layout_marginTop="@dimen/m32"
                     android:gravity="center_vertical|end"
-                    android:text="@string/auto_print_receipt"
+                    android:text="@string/settings"
                     android:textColor="@color/small_txt"
                     android:textSize="24sp" />
 
@@ -135,6 +146,15 @@
                     android:layout_marginTop="@dimen/m32"
                     android:checked="true" />
 
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/print_switch"
+                    style="@style/Switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/m32"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginTop="@dimen/m32"
+                    android:checked="true" />
+
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/languages_dropdown"
                     android:layout_width="match_parent"
@@ -153,14 +173,15 @@
                     android:gravity="center_vertical|start"
                     android:spinnerMode="dropdown" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/print_switch"
-                    style="@style/Switch"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/settings"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/m32"
-                    android:layout_gravity="center_vertical|start"
                     android:layout_marginTop="@dimen/m32"
-                    android:checked="true" />
+                    android:gravity="start|center_vertical"
+                    android:text="@string/open"
+                    android:textColor="@color/primary"
+                    android:textSize="24sp" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/privacy_policy"

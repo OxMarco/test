@@ -33,3 +33,10 @@ fun Activity.openAppSettings() {
         startActivity(this)
     }
 }
+
+fun Activity.openAndroidSettings() {
+    Intent(Settings.ACTION_SETTINGS).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(this)
+    }
+}
