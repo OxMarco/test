@@ -15,10 +15,12 @@
     <string name="leantill">leantill</string>
     <string name="code">Code</string>
     <string name="click_here_to_send_the_email_again">Click here to send the email again.</string>
-    <string name="next_send_in_60s">Next send in 60s...</string>
+    <string name="next_send_in_60s">Next retry in 60s…</string>
     <string name="cancel">Cancel</string>
     <string name="enter">Enter</string>
     <string name="euro">€</string>
+    <string name="dollar">$</string>
+    <string name="open">open</string>
     <string name="add_description">+ add description</string>
     <string name="charge">Charge</string>
     <string name="_5">5%</string>
@@ -38,7 +40,7 @@
     <string name="view">view</string>
     <string name="dark_mode">Dark mode</string>
     <string name="tap_insert_or_swipe_to_pay">Tap, insert or swipe to pay</string>
-    <string name="processing">Processing...</string>
+    <string name="processing">Processing…</string>
     <string name="transaction_successful">Transaction Successful</string>
     <string name="failed">Failed!</string>
     <string name="cancel_payment">Cancel Payment?</string>

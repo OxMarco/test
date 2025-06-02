@@ -7,13 +7,13 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivityMainBinding
+import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.EXTRA_TOTAL_WITH_TIP
 import xyz.raincards.utils.Preferences
@@ -21,7 +21,7 @@ import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var goTo: GoTo
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateAmountText() {
         val cents = if (inputDigits.isEmpty()) 0 else inputDigits.toString().toLong()
         total = String.format(Locale.getDefault(), "%.2f", cents / 100.0)
-        binding.pinboard.amount.text = total
+        binding.pinboard.amount.text = total.withCurrency()
     }
 
     private fun showAskForCardLayout() {

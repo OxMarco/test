@@ -11,5 +11,5 @@ object Setup {
 
     val BASE_URL = if (BuildConfig.IS_DEV) devBaseURL else prodBaseURL
 
-    fun getCurrency() = "€"
+    fun getCurrency() = "$"
 }

@@ -1,19 +1,20 @@
 package xyz.raincards.ui.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.raincards.databinding.ActivitySettingsBinding
+import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.PRIVACY_POLICY
 import xyz.raincards.utils.Constants.TERMS_OF_SERVICE
 import xyz.raincards.utils.Preferences
+import xyz.raincards.utils.extensions.openAndroidSettings
 import xyz.raincards.utils.extensions.openWebURL
 
 @AndroidEntryPoint
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -45,6 +46,8 @@ class SettingsActivity : AppCompatActivity() {
 
             privacyPolicy.setOnClickListener { openWebURL(PRIVACY_POLICY) }
             terms.setOnClickListener { openWebURL(TERMS_OF_SERVICE) }
+
+            settings.setOnClickListener { openAndroidSettings() }
         }
     }
 }
