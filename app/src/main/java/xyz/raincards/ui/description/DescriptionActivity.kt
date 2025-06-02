@@ -2,6 +2,9 @@ package xyz.raincards.ui.description
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import xyz.raincards.databinding.ActivityDescriptionBinding
@@ -24,6 +27,13 @@ class DescriptionActivity : BaseActivity() {
         setContentView(binding.root)
 
         binding.apply {
+            description.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    okBtn.performClick()
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
             cancelBtn.setOnClickListener { finish() }
             okBtn.setOnClickListener {
                 val intent = Intent()

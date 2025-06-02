@@ -1,13 +1,18 @@
 package xyz.raincards.utils.extensions
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
+import java.util.Locale
 import xyz.raincards.R
+import xyz.raincards.models.Language
 
 fun Activity.showToast(message: String?) {
     Toast.makeText(this, message ?: getString(R.string.error), Toast.LENGTH_LONG).show()
@@ -23,6 +28,24 @@ fun Activity.openWebURL(link: String) {
         startActivity(intent)
     } catch (e: Exception) {
         showToast(getString(R.string.browser_error))
+    }
+}
+
+fun Activity.restart() {
+    val intent = intent
+    finish()
+    startActivity(intent)
+}
+
+fun Context.changeLocale(lcl: Language) {
+    val locale = Locale(lcl.languageCode, lcl.countryCode)
+    Locale.setDefault(locale)
+    val config = Configuration()
+    config.locale = locale
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+        createConfigurationContext(config)
+    } else {
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }
 

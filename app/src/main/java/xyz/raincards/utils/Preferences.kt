@@ -11,6 +11,9 @@ class Preferences {
         private const val DARK_MODE_ON = "DARK_MODE_ON"
         private const val TIP_SCREEN_ON = "TIP_SCREEN_ON"
         private const val AUTO_PRINT_RECEIPT_ON = "AUTO_PRINT_RECEIPT_ON"
+        private const val CURRENCY = "CURRENCY"
+        private const val LANGUAGE = "LANGUAGE"
+
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
 
         private val preferences: SharedPreferences
@@ -19,6 +22,14 @@ class Preferences {
         fun getAccessToken() = preferences.getString(ACCESS_TOKEN, "").orEmpty()
         fun setAccessToken(token: String) {
             preferences.edit { putString(ACCESS_TOKEN, token) }
+        }
+        fun getSelectedCurrency() = preferences.getString(CURRENCY, Setup.defaultCurrency).orEmpty()
+        fun saveSelectedCurrency(currency: String) {
+            preferences.edit { putString(CURRENCY, currency) }
+        }
+        fun getSelectedLanguage() = preferences.getString(LANGUAGE, Setup.defaultLanguageCode) ?: ""
+        fun saveSelectedLanguage(language: String) {
+            preferences.edit { putString(LANGUAGE, language) }
         }
 
         fun isDarkModeOn() = preferences.getBoolean(DARK_MODE_ON, false)

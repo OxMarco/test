@@ -8,6 +8,13 @@
         <item name="android:textColor">@color/text</item>
         <item name="android:windowBackground">@color/bckg</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
+
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="android:windowFullscreen">true</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>-->
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
     </style>
 
     <style name="Theme.Nexgo" parent="Base.Theme.Nexgo" />

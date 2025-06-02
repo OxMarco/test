@@ -17,10 +17,16 @@ import androidx.core.content.ContextCompat
 import xyz.raincards.BuildConfig
 import xyz.raincards.R
 import xyz.raincards.utils.Preferences
-import xyz.raincards.utils.Setup
+import xyz.raincards.utils.Setup.USD
 import xyz.raincards.utils.Setup.test_deviceID
 
-fun String.withCurrency() = "${Setup.getCurrency()}$this" // @todo invert if EUR
+fun String.withCurrency(): String {
+    return if (Preferences.getSelectedCurrency() == USD) {
+        "${Preferences.getSelectedCurrency()}$this"
+    } else {
+        "$this${Preferences.getSelectedCurrency()}"
+    }
+}
 
 fun Context.getDeviceID(): String {
     return if (BuildConfig.DEBUG) {

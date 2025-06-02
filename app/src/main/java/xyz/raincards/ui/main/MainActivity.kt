@@ -50,12 +50,17 @@ class MainActivity : BaseActivity() {
                     updateDescText()
                 }
                 data.getStringExtra(EXTRA_TOTAL_WITH_TIP)?.let {
-                    total = it
-                    binding.pinboard.amount.text = total
+                    total = String.format(Locale.getDefault(), "%.2f", it.toDouble())
+                    binding.pinboard.amount.text = total.withCurrency()
                     showAskForCardLayout()
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateAmountText()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +85,7 @@ class MainActivity : BaseActivity() {
             chargeBtn.setOnClickListener {
                 if (total.toDouble() > 0) {
                     if (Preferences.isTipScreenOn()) {
-                        goTo.tipScreen(launcher, amount.text.toString(), desc)
+                        goTo.tipScreen(launcher, total, desc)
                     } else {
                         showAskForCardLayout()
                     }

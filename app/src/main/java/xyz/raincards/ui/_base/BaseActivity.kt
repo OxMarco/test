@@ -1,6 +1,7 @@
 package xyz.raincards.ui._base
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
@@ -9,8 +10,12 @@ import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import xyz.raincards.databinding.ActivityBaseBinding
+import xyz.raincards.utils.ContextWrapper
 import xyz.raincards.utils.MyLog
+import xyz.raincards.utils.Preferences
+import xyz.raincards.utils.Setup
 
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
@@ -45,6 +50,19 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         adjustFontScale(resources.configuration)
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+//        val newLocale = Locale(Preferences.getSelectedLanguage())
+        val selectedLanguage = Setup.languages.first {
+            it.countryCode == Preferences.getSelectedLanguage()
+        }
+        val newLocale = Locale(
+            selectedLanguage.languageCode,
+            selectedLanguage.countryCode
+        )
+        val context: Context = ContextWrapper.wrap(newBase, newLocale)
+        super.attachBaseContext(context)
     }
 
     private fun adjustFontScale(configuration: Configuration) {

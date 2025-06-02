@@ -215,16 +215,15 @@
             android:textSize="40sp"
             app:fontFamily="@font/poppins_semi_bold" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/btn_x"
+        <ImageView
+            android:padding="@dimen/m8"
+            android:src="@drawable/img_back_space"            android:id="@+id/btn_x"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="x"
-            android:textSize="40sp"
-            app:fontFamily="@font/poppins_semi_bold" />
+            app:fontFamily="@font/poppins_semi_bold"
+            app:tint="@color/primary" />
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView

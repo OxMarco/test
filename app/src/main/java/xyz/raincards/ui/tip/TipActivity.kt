@@ -2,6 +2,9 @@ package xyz.raincards.ui.tip
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,6 +80,14 @@ class TipActivity : BaseActivity() {
             okBtn.setOnClickListener {
                 total = (total.toDouble() + customTip.text.toString().toDouble()).toString()
                 goBackToPayment()
+            }
+
+            customTip.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    okBtn.performClick()
+                    return@setOnEditorActionListener true
+                }
+                false
             }
         }
     }

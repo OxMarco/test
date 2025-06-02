@@ -19,16 +19,16 @@
     <ImageView
         android:id="@+id/back"
         android:layout_width="40dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:padding="@dimen/m12"
         android:scaleType="fitXY"
         android:src="@drawable/img_back_day"
-        android:tint="@color/primary"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toTopOf="@id/title"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="@color/primary" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/m16"
-                android:layout_weight="7"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -125,7 +125,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
@@ -156,22 +156,18 @@
                     android:checked="true" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/languages_dropdown"
-                    android:layout_width="match_parent"
+                    android:id="@+id/languages"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/m32"
                     android:layout_marginTop="@dimen/m32"
-                    android:background="@drawable/shape_language_dropdown"
-                    android:gravity="center_vertical|start"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/currencies_dropdown"
-                    android:layout_width="match_parent"
+                    android:id="@+id/currencies"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/m32"
                     android:layout_marginTop="@dimen/m32"
-                    android:background="@drawable/shape_language_dropdown"
-                    android:gravity="center_vertical|start"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/settings"
