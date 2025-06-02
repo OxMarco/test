@@ -1,4 +1,4 @@
-package xyz.raincards.api
+package xyz.raincards.api.exceptions
 
 import java.io.IOException
 

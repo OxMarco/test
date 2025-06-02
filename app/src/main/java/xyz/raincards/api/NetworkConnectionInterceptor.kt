@@ -8,6 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import xyz.raincards.AndroidApp
+import xyz.raincards.api.exceptions.NoConnectivityException
 
 class NetworkConnectionInterceptor : Interceptor {
 
