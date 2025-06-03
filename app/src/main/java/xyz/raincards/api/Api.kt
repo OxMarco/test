@@ -2,9 +2,13 @@ package xyz.raincards.api
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
+import xyz.raincards.models.requests.ChargeRequest
 import xyz.raincards.models.requests.CodeRequest
 import xyz.raincards.models.requests.LoginRequest
+import xyz.raincards.models.responses.ChargeResponse
 import xyz.raincards.models.responses.CodeResponse
 import xyz.raincards.models.responses.LoginResponse
 
@@ -20,9 +24,13 @@ interface Api {
         @Body request: CodeRequest
     ): Response<CodeResponse>
 
-//    @POST("brands/user-favorites")
-//    suspend fun saveAsFavorite(
-//        @Body request: SaveFavoriteBrandRequest,
-//        @Header("Authorization") authHeader: String = getAuthHeader()
-//    ): Response<ResponseData<Brand>>
+    @GET("balance")
+    suspend fun getBalance(
+        @Query("code") code: String
+    ): Response<CodeResponse>
+
+    @POST("charge")
+    suspend fun charge(
+        @Body request: ChargeRequest
+    ): Response<ChargeResponse>
 }

@@ -23,9 +23,9 @@ class LoginEmailViewModel @Inject constructor(
 //        executeWithCommonErrorHandling(
 //            apiCall = { repository.login(request) },
 //            onSuccess = { response ->
-// //                                 repository.insertUser(response.user)
-// //                 Preferences.setAccessToken(response.authorization)
-// //                 _eventChannel.send(Event.CodeSent)
+//                //                                 repository.insertUser(response.user)
+//                //                 Preferences.setAccessToken(response.authorization)
+//                _eventChannel.send(Event.CodeSent)
 //            }
 //        )
 

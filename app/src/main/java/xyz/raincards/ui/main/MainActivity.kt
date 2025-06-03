@@ -7,16 +7,20 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.getValue
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivityMainBinding
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.EXTRA_TOTAL_WITH_TIP
 import xyz.raincards.utils.Preferences
+import xyz.raincards.utils.extensions.collectBaseEvents
+import xyz.raincards.utils.extensions.collectLifecycleFlow
 import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
@@ -25,6 +29,8 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var goTo: GoTo
+
+    private val viewModel: MainViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
     private val inputDigits = StringBuilder()
@@ -71,16 +77,19 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        showPinboard()
         updateAmountText()
 
-        binding.cancel.apply {
-            noBtn.setOnClickListener { root.isVisible = false }
-            yesBtn.setOnClickListener {
-                root.isVisible = false
-                resetPinboard()
+        collectBaseEvents(viewModel, binding.root)
+        collectLifecycleFlow(viewModel.events) { event ->
+            when (event) {
+                is MainViewModel.Event.ChargeSuccess -> showChargeSuccess()
+                is MainViewModel.Event.ChargeError -> showChargeError("xyz")
             }
         }
+    }
 
+    private fun showPinboard() {
         binding.pinboard.apply {
             chargeBtn.setOnClickListener {
                 if (total.toDouble() > 0) {
@@ -114,7 +123,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun showCancelLayout() {
-        binding.cancel.root.isVisible = true
+        binding.cancel.apply {
+            root.isVisible = true
+            noBtn.setOnClickListener { root.isVisible = false }
+            yesBtn.setOnClickListener {
+                root.isVisible = false
+                resetPinboard()
+            }
+        }
     }
 
     private fun updateDescText() {
@@ -138,19 +154,34 @@ class MainActivity : BaseActivity() {
             qrCode.setOnClickListener { goTo.qrCodeScreen(total, desc) }
             root.isVisible = true
             amount.text = total.withCurrency()
+
+            // fixme remove this onclicklistener
             card.setOnClickListener {
                 root.isVisible = false
-                binding.processing.root.isVisible = true
-                rotateIndefinitely(binding.processing.loader)
+                charge()
             }
         }
+    }
 
-        binding.processing.loader.setOnClickListener {
-            binding.processing.root.isVisible = false
-            binding.success.root.isVisible = true
-            binding.success.amount.text = total.withCurrency()
-            binding.success.chargeBtn.setOnClickListener { resetPinboard() }
-        }
+    private fun showChargeSuccess() {
+        binding.processing.root.isVisible = false
+        binding.success.root.isVisible = true
+        binding.success.amount.text = total.withCurrency()
+        binding.success.chargeBtn.setOnClickListener { resetPinboard() }
+    }
+
+    private fun showChargeError(message: String) {
+        binding.processing.root.isVisible = false
+        binding.error.root.isVisible = true
+        binding.error.errorMessage.text = message
+        binding.error.errorImg.setOnClickListener { resetPinboard() }
+    }
+
+    private fun charge() {
+        binding.processing.root.isVisible = true
+        rotateIndefinitely(binding.processing.loader)
+
+        viewModel.charge("", "", "", "", "")
     }
 
     private fun rotateIndefinitely(view: View) {
