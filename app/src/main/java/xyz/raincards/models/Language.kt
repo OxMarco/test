@@ -1,7 +1,7 @@
 package xyz.raincards.models
 
 const val GB = "GB"
-const val ME = "ME"
+// const val MT = "MT"
 
 data class Language(
     val title: String,

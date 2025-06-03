@@ -3,7 +3,7 @@ package xyz.raincards.utils
 import xyz.raincards.BuildConfig
 import xyz.raincards.models.GB
 import xyz.raincards.models.Language
-import xyz.raincards.models.ME
+// import xyz.raincards.models.MT
 
 object Setup {
 
@@ -16,15 +16,15 @@ object Setup {
 
     const val defaultCurrency = "$"
     const val USD = "$"
+    const val EUR = "€"
     val currencies = listOf<String>(
         USD,
-        "€",
-        "£"
+        EUR
     )
 
     const val defaultLanguageCode = GB
     val languages = listOf<Language>(
-        Language("ENG", "en", GB),
-        Language("MNE", "sr", ME)
+        Language("EN", "en", GB)
+//        Language("MT", "mt", MT)
     )
 }

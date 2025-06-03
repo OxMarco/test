@@ -12,14 +12,14 @@
     <string name="you_will_receive_a_code_to_sign_in">you will receive a code to sign in</string>
     <string name="email">Email</string>
     <string name="enter_email">Enter email</string>
-    <string name="leantill">leantill</string>
+    <string name="leantill" translatable="false">leantill</string>
     <string name="code">Code</string>
     <string name="click_here_to_send_the_email_again">Click here to send the email again.</string>
     <string name="next_send_in_60s">Next retry in 60s…</string>
     <string name="cancel">Cancel</string>
     <string name="enter">Enter</string>
-    <string name="euro">€</string>
-    <string name="dollar">$</string>
+    <string name="euro" translatable="false">€</string>
+    <string name="dollar" translatable="false">$</string>
     <string name="open">open</string>
     <string name="add_description">+ add description</string>
     <string name="charge">Charge</string>
@@ -29,7 +29,7 @@
     <string name="no_tip">No tip</string>
     <string name="custom_tip">custom tip</string>
     <string name="payment_description">Payment Description</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="settings">Settings</string>
     <string name="tip_screen">Tip Screen</string>
     <string name="language">Language</string>
@@ -47,5 +47,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="scan_to_pay">Scan to pay</string>
-
+    <string name="app_name" translatable="false">RainPOS</string>
 </resources>
