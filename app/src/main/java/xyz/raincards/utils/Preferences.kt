@@ -13,7 +13,6 @@ class Preferences {
         private const val AUTO_PRINT_RECEIPT_ON = "AUTO_PRINT_RECEIPT_ON"
         private const val CURRENCY = "CURRENCY"
         private const val LANGUAGE = "LANGUAGE"
-
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
 
         private val preferences: SharedPreferences

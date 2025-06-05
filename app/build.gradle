@@ -153,4 +153,15 @@ dependencies {
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler
     implementation libs.androidx.room.ktx
+
+    // Nexgo
+    implementation(name: 'nexgo-smartpos-sdk-v3.08.006_20241216', ext: 'aar', group: 'nexgo', version: 'v3.08.006')
+}
+
+repositories {
+    google()
+    mavenCentral()
+    flatDir {
+        dirs "libs"
+    }
 }
