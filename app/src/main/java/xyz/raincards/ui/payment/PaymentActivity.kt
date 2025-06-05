@@ -2,6 +2,7 @@ package xyz.raincards.ui.payment
 
 import android.os.Bundle
 import android.util.Log
+import androidx.core.view.isVisible
 import com.nexgo.common.LogUtils
 import com.nexgo.oaf.apiv3.DeviceEngine
 import com.nexgo.oaf.apiv3.SdkResult
@@ -9,7 +10,6 @@ import com.nexgo.oaf.apiv3.device.pinpad.OnPinPadInputListener
 import com.nexgo.oaf.apiv3.device.pinpad.PinAlgorithmModeEnum
 import com.nexgo.oaf.apiv3.device.pinpad.PinKeyboardModeEnum
 import com.nexgo.oaf.apiv3.device.pinpad.PinPad
-import com.nexgo.oaf.apiv3.device.pinpad.PinPadKeyCode
 import com.nexgo.oaf.apiv3.device.reader.CardInfoEntity
 import com.nexgo.oaf.apiv3.device.reader.CardReader
 import com.nexgo.oaf.apiv3.device.reader.CardSlotTypeEnum
@@ -17,6 +17,7 @@ import com.nexgo.oaf.apiv3.device.reader.OnCardInfoListener
 import com.nexgo.oaf.apiv3.emv.CandidateAppInfoEntity
 import com.nexgo.oaf.apiv3.emv.EmvDataSourceEnum
 import com.nexgo.oaf.apiv3.emv.EmvEntryModeEnum
+import com.nexgo.oaf.apiv3.emv.EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACTLESS
 import com.nexgo.oaf.apiv3.emv.EmvHandler2
 import com.nexgo.oaf.apiv3.emv.EmvOnlineResultEntity
 import com.nexgo.oaf.apiv3.emv.EmvProcessFlowEnum
@@ -24,26 +25,61 @@ import com.nexgo.oaf.apiv3.emv.EmvProcessResultEntity
 import com.nexgo.oaf.apiv3.emv.EmvTransConfigurationEntity
 import com.nexgo.oaf.apiv3.emv.OnEmvProcessListener2
 import com.nexgo.oaf.apiv3.emv.PromptEnum
-import xyz.raincards.AndroidApp
-import xyz.raincards.ui._base.BaseActivity
-import xyz.raincards.utils.Country
-import xyz.raincards.utils.Currency
-import xyz.raincards.utils.TransactionType
-import xyz.raincards.utils.Setup
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
+import xyz.raincards.AndroidApp
+import xyz.raincards.databinding.ActivityPaymentBinding
+import xyz.raincards.ui._base.BaseActivity
+import xyz.raincards.utils.Constants.EXTRA_AMOUNT
+import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
+import xyz.raincards.utils.Country
+import xyz.raincards.utils.Currency
+import xyz.raincards.utils.Setup
+import xyz.raincards.utils.TransactionType
+import xyz.raincards.utils.extensions.withCurrency
+import xyz.raincards.utils.navigation.GoTo
 
 // @todo add render function to show the payment page (the one with the four dots and the tap card icon)
-class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener2, OnPinPadInputListener {
+class PaymentActivity :
+    BaseActivity(),
+    OnCardInfoListener,
+    OnEmvProcessListener2,
+    OnPinPadInputListener {
+
+    @Inject
+    lateinit var goTo: GoTo
+
+    private lateinit var binding: ActivityPaymentBinding
 
     private lateinit var deviceEngine: DeviceEngine
     private lateinit var emvHandler2: EmvHandler2
     private lateinit var cardReader: CardReader
     private lateinit var pinPad: PinPad
 
+    private var total = ""
+    private var desc = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityPaymentBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        total = intent.getStringExtra(EXTRA_AMOUNT)!!
+        intent.getStringExtra(EXTRA_DESCRIPTION)?.let {
+            desc = it
+        }
+
+        binding.apply {
+            progress.animateProgress()
+
+//            trash.setOnClickListener { showCancelLayout() }
+            qrCode.setOnClickListener { goTo.qrCodeScreen(total, desc) }
+            root.isVisible = true
+            amount.text = total.withCurrency()
+        }
 
         deviceEngine = (application as AndroidApp).deviceEngine
         emvHandler2 = deviceEngine.getEmvHandler2("app2")
@@ -74,8 +110,14 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
             emvTransDataEntity.currencyCode = Currency.EUR.code.toString() // @todo get from preferences
             emvTransDataEntity.termId = Setup.test_deviceID
             emvTransDataEntity.merId = Setup.test_merchantID
-            emvTransDataEntity.transDate = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
-            emvTransDataEntity.transTime = SimpleDateFormat("hhmmss", Locale.getDefault()).format(Date())
+            emvTransDataEntity.transDate = SimpleDateFormat(
+                "yyMMdd",
+                Locale.getDefault()
+            ).format(Date())
+            emvTransDataEntity.transTime = SimpleDateFormat(
+                "hhmmss",
+                Locale.getDefault()
+            ).format(Date())
             emvTransDataEntity.traceNo = "00000000"
             emvTransDataEntity.emvProcessFlowEnum = EmvProcessFlowEnum.EMV_PROCESS_FLOW_STANDARD
 
@@ -85,7 +127,7 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
                 }
 
                 CardSlotTypeEnum.RF -> {
-                    emvTransDataEntity.emvEntryModeEnum = EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACTLESS
+                    emvTransDataEntity.emvEntryModeEnum = EMV_ENTRY_MODE_CONTACTLESS
                 }
 
                 CardSlotTypeEnum.SWIPE -> {
@@ -98,16 +140,12 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
             }
 
             emvHandler2.emvProcess(emvTransDataEntity, this)
-
         } else if (returnCode == SdkResult.TimeOut) {
-
         } else if (returnCode == SdkResult.Fail) {
-
         }
     }
 
     override fun onSwipeIncorrect() {
-        TODO("Not yet implemented")
     }
 
     override fun onMultipleCards() {
@@ -139,7 +177,8 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
         pinPad.setPinKeyboardMode(PinKeyboardModeEnum.FIXED)
 
         if (isOnlinePin) {
-            pinPad.inputOnlinePin( // first parameter is an array of acceptable PIN lengths namely 0 (PIN bypass), and 4 up till 12
+            pinPad.inputOnlinePin(
+                // first parameter is an array of acceptable PIN lengths namely 0 (PIN bypass), and 4 up till 12
                 intArrayOf(0x00, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c),
                 60,
                 emvHandler2.emvCardDataInfo.cardNo.toByteArray(),
@@ -175,15 +214,18 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
         when (promptEnum) {
             PromptEnum.APP_SELECTION_IS_NOT_ACCEPTED -> Log.d("payment", "NO APPLICATION SELECTED")
             PromptEnum.OFFLINE_PIN_CORRECT -> {
-                Log.d("payment","PIN Accepted")
+                Log.d("payment", "PIN Accepted")
             }
+
             PromptEnum.OFFLINE_PIN_INCORRECT -> {
-                Log.d("payment","Invalid PIN")
+                Log.d("payment", "Invalid PIN")
             }
+
             PromptEnum.OFFLINE_PIN_INCORRECT_TRY_AGAIN -> {
-                Log.d("payment","Invalid PIN, TRY AGAIN")
+                Log.d("payment", "Invalid PIN, TRY AGAIN")
             }
-            else -> Log.d("payment","Error - else branch running")
+
+            else -> Log.d("payment", "Error - else branch running")
         }
 
         emvHandler2.onSetPromptResponse(true)
@@ -194,9 +236,8 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
     }
 
     override fun onFinish(retCode: Int, resultEntity: EmvProcessResultEntity?) {
-        when(retCode) {
+        when (retCode) {
             SdkResult.Success, SdkResult.Emv_Declined, SdkResult.Emv_Success_Arpc_Fail -> {
-
             }
 
             SdkResult.Emv_Card_Block -> {
@@ -218,7 +259,7 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
     }
 
     override fun onInputResult(retCode: Int, data: ByteArray?) {
-        when(retCode) {
+        when (retCode) {
             SdkResult.Success, SdkResult.PinPad_No_Pin_Input, SdkResult.PinPad_Input_Cancel -> {
                 if (data != null) {
                     val temp = ByteArray(8)
@@ -227,11 +268,15 @@ class PaymentActivity : BaseActivity(), OnCardInfoListener, OnEmvProcessListener
                     Log.d("payment", "Pin Data Err")
                 }
 
-                //(var1 = whether valid input / success, var2 = pin bypass)
-                emvHandler2.onSetPinInputResponse(retCode != SdkResult.PinPad_Input_Cancel, retCode == SdkResult.PinPad_No_Pin_Input)
+                // (var1 = whether valid input / success, var2 = pin bypass)
+                emvHandler2.onSetPinInputResponse(
+                    retCode != SdkResult.PinPad_Input_Cancel,
+                    retCode == SdkResult.PinPad_No_Pin_Input
+                )
             }
 
-            else -> { //PIN entering failed with some other error - Trigger some UI to feedback to user
+            else -> {
+                // PIN entering failed with some other error - Trigger some UI to feedback to user
                 emvHandler2.onSetPinInputResponse(false, false)
             }
         }

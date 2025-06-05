@@ -1,6 +1,11 @@
 package xyz.raincards.utils
 
-enum class Currency(val code: Int, val fullName: String, val symbol: String, val description: String) {
+enum class Currency(
+    val code: Int,
+    val fullName: String,
+    val symbol: String,
+    val description: String
+) {
     USD(840, "USD", "$", "US Dollar"),
     EUR(978, "EUR", "€", "Euro");
 

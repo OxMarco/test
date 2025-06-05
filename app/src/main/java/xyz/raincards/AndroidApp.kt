@@ -4,11 +4,11 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.FirebaseApp
 import com.nexgo.oaf.apiv3.APIProxy
-import dagger.hilt.android.HiltAndroidApp
-import xyz.raincards.utils.Preferences
-import com.nexgo.oaf.apiv3.DeviceEngine;
+import com.nexgo.oaf.apiv3.DeviceEngine
 import com.nexgo.oaf.apiv3.device.pinpad.PinPad
 import com.nexgo.oaf.apiv3.platform.Platform
+import dagger.hilt.android.HiltAndroidApp
+import xyz.raincards.utils.Preferences
 
 @HiltAndroidApp
 class AndroidApp : Application() {

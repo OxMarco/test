@@ -41,7 +41,7 @@ class MainActivity : BaseActivity() {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             when {
-                binding.askForCard.root.isVisible -> showCancelLayout()
+//                binding.askForCard.root.isVisible -> showCancelLayout()
                 binding.pinboard.root.isVisible -> finish()
                 else -> binding.pinboard.root.isVisible = true
             }
@@ -58,7 +58,7 @@ class MainActivity : BaseActivity() {
                 data.getStringExtra(EXTRA_TOTAL_WITH_TIP)?.let {
                     total = String.format(Locale.getDefault(), "%.2f", it.toDouble())
                     binding.pinboard.amount.text = total.withCurrency()
-                    showAskForCardLayout()
+                    openPaymentScreen()
                 }
             }
         }
@@ -89,6 +89,10 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun openPaymentScreen() {
+        goTo.paymentScreen(launcher, total, desc)
+    }
+
     private fun showPinboard() {
         binding.pinboard.apply {
             chargeBtn.setOnClickListener {
@@ -96,7 +100,7 @@ class MainActivity : BaseActivity() {
                     if (Preferences.isTipScreenOn()) {
                         goTo.tipScreen(launcher, total, desc)
                     } else {
-                        showAskForCardLayout()
+                        openPaymentScreen()
                     }
                 }
             }
@@ -145,22 +149,6 @@ class MainActivity : BaseActivity() {
         val cents = if (inputDigits.isEmpty()) 0 else inputDigits.toString().toLong()
         total = String.format(Locale.getDefault(), "%.2f", cents / 100.0)
         binding.pinboard.amount.text = total.withCurrency()
-    }
-
-    private fun showAskForCardLayout() {
-        binding.pinboard.root.isVisible = false
-        binding.askForCard.apply {
-            trash.setOnClickListener { showCancelLayout() }
-            qrCode.setOnClickListener { goTo.qrCodeScreen(total, desc) }
-            root.isVisible = true
-            amount.text = total.withCurrency()
-
-            // fixme remove this onclicklistener
-            card.setOnClickListener {
-                root.isVisible = false
-                charge()
-            }
-        }
     }
 
     private fun showChargeSuccess() {

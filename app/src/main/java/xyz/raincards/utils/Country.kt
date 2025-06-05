@@ -1,6 +1,11 @@
 package xyz.raincards.utils
 
-enum class Country(val code: Int, val shortName2: String, val shortName3: String, val fullName: String) {
+enum class Country(
+    val code: Int,
+    val shortName2: String,
+    val shortName3: String,
+    val fullName: String
+) {
     UNITED_STATES(840, "US", "USA", "United States of America"),
     ITALY(380, "IT", "ITA", "Italy"),
     MONTENEGRO(499, "ME", "MNE", "Montenegro"),

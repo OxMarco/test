@@ -7,11 +7,6 @@
     tools:context=".ui.main.MainActivity">
 
     <include
-        android:id="@+id/ask_for_card"
-        layout="@layout/layout_ask_for_card"
-        android:visibility="gone" />
-
-    <include
         android:id="@+id/processing"
         layout="@layout/layout_processing"
         android:visibility="gone" />

@@ -8,6 +8,7 @@ import xyz.raincards.ui.description.DescriptionActivity
 import xyz.raincards.ui.login.code.LoginCodeActivity
 import xyz.raincards.ui.login.email.LoginEmailActivity
 import xyz.raincards.ui.main.MainActivity
+import xyz.raincards.ui.payment.PaymentActivity
 import xyz.raincards.ui.qrcode.QRCodeActivity
 import xyz.raincards.ui.settings.SettingsActivity
 import xyz.raincards.ui.tip.TipActivity
@@ -40,6 +41,17 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
             activity.startActivity(this)
         }
     }
+
+    override fun paymentScreen(
+        launcher: ActivityResultLauncher<Intent>,
+        amount: String,
+        description: String
+    ) = launcher.launch(
+        Intent(activity, PaymentActivity::class.java).apply {
+            putExtra(EXTRA_DESCRIPTION, description)
+            putExtra(EXTRA_AMOUNT, amount)
+        }
+    )
 
     override fun descriptionScreen(
         launcher: ActivityResultLauncher<Intent>

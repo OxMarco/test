@@ -33,5 +33,6 @@
         <activity android:name="xyz.raincards.ui.description.DescriptionActivity" />
         <activity android:name="xyz.raincards.ui.tip.TipActivity" />
         <activity android:name="xyz.raincards.ui.qrcode.QRCodeActivity" />
+        <activity android:name="xyz.raincards.ui.payment.PaymentActivity" />
     </application>
 </manifest>

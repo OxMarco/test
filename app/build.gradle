@@ -30,14 +30,7 @@ android {
         minSdk 26
         targetSdk 35
         versionCode 1000
-        versionName "1.0.0"
-
-//        kapt {
-//            arguments {
-//                arg("room.schemaLocation", "$projectDir/schemas")
-//            }
-//            correctErrorTypes true
-//        }
+        versionName "1.0.00"
     }
 
     applicationVariants.configureEach { variant ->
