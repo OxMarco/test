@@ -8,6 +8,7 @@ import xyz.raincards.models.Language
 object Setup {
 
     const val test_deviceID = "testPOS"
+    const val test_merchantID = "000000000000001"
 
     private const val prodBaseURL = "https://api.raincards.xyz/v1/"
     private const val devBaseURL = "http://localhost:3000/v1/"
