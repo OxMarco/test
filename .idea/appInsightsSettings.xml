@@ -22,9 +22,9 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="xyz.raincards" />
+                  <option name="appId" value="xyz.raincards.dev" />
                   <option name="mobileSdkAppId" value="1:324293947615:android:d1321134cfda872a66396a" />
-                  <option name="projectId" value="rainpos" />
+                  <option name="projectId" value="raincards-pos" />
                   <option name="projectNumber" value="324293947615" />
                 </ConnectionSetting>
               </option>

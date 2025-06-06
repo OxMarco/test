@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import javax.inject.Inject
+import xyz.raincards.ui.cancel.CancelPaymentActivity
 import xyz.raincards.ui.description.DescriptionActivity
 import xyz.raincards.ui.login.code.LoginCodeActivity
 import xyz.raincards.ui.login.email.LoginEmailActivity
@@ -61,6 +62,14 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
         }
     )
 
+    override fun cancelPaymentScreen(
+        launcher: ActivityResultLauncher<Intent>
+    ) = launcher.launch(
+        Intent(activity, CancelPaymentActivity::class.java).apply {
+//            putExtra(EXTRA_AFTER_LOGIN, afterLogin)
+        }
+    )
+
     override fun tipScreen(
         launcher: ActivityResultLauncher<Intent>,
         amount: String,
@@ -73,6 +82,7 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
     )
 
     override fun qrCodeScreen(
+        launcher: ActivityResultLauncher<Intent>,
         amount: String,
         description: String
     ) {

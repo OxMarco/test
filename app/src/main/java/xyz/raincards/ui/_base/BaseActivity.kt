@@ -33,6 +33,12 @@ open class BaseActivity : AppCompatActivity() {
         content = binding.content
         content.addView(view)
 
+        super.setContentView(binding.root)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         window.decorView.systemUiVisibility = (
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 or View.SYSTEM_UI_FLAG_FULLSCREEN // hides status bar
@@ -41,8 +47,6 @@ open class BaseActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             )
-
-        super.setContentView(binding.root)
     }
 
     @SuppressLint("SourceLockedOrientationActivity")

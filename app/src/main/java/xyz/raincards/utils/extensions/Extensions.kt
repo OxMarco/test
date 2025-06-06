@@ -16,15 +16,17 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import xyz.raincards.BuildConfig
 import xyz.raincards.R
+import xyz.raincards.utils.Currency
 import xyz.raincards.utils.Preferences
-import xyz.raincards.utils.Setup.USD
+import xyz.raincards.utils.Setup
 import xyz.raincards.utils.Setup.test_deviceID
 
 fun String.withCurrency(): String {
-    return if (Preferences.getSelectedCurrency() == USD) {
-        "${Preferences.getSelectedCurrency()}$this"
+    val selectedCurrency = Setup.getSelectedCurrency()
+    return if (selectedCurrency.code == Currency.USD.code) {
+        "${selectedCurrency.symbol}$this"
     } else {
-        "$this${Preferences.getSelectedCurrency()}"
+        "$this${selectedCurrency.symbol}"
     }
 }
 

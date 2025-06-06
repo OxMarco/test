@@ -2,6 +2,7 @@ package xyz.raincards.ui.payment
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.view.isVisible
 import com.nexgo.common.LogUtils
 import com.nexgo.oaf.apiv3.DeviceEngine
@@ -25,6 +26,7 @@ import com.nexgo.oaf.apiv3.emv.EmvProcessResultEntity
 import com.nexgo.oaf.apiv3.emv.EmvTransConfigurationEntity
 import com.nexgo.oaf.apiv3.emv.OnEmvProcessListener2
 import com.nexgo.oaf.apiv3.emv.PromptEnum
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,14 +36,14 @@ import xyz.raincards.databinding.ActivityPaymentBinding
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
+import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Country
-import xyz.raincards.utils.Currency
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
-// @todo add render function to show the payment page (the one with the four dots and the tap card icon)
+@AndroidEntryPoint
 class PaymentActivity :
     BaseActivity(),
     OnCardInfoListener,
@@ -61,6 +63,15 @@ class PaymentActivity :
     private var total = ""
     private var desc = ""
 
+    private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
+        when (result.resultCode) {
+            PAYMENT_CANCELED -> {
+                setResult(PAYMENT_CANCELED)
+                finish()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,9 +85,8 @@ class PaymentActivity :
 
         binding.apply {
             progress.animateProgress()
-
-//            trash.setOnClickListener { showCancelLayout() }
-            qrCode.setOnClickListener { goTo.qrCodeScreen(total, desc) }
+            trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
+            qrCode.setOnClickListener { goTo.qrCodeScreen(launcher, total, desc) }
             root.isVisible = true
             amount.text = total.withCurrency()
         }
@@ -104,10 +114,10 @@ class PaymentActivity :
 
             val emvTransDataEntity = EmvTransConfigurationEntity()
 
-            emvTransDataEntity.transAmount = "1000" // @todo get amount from context
+            emvTransDataEntity.transAmount = total
             emvTransDataEntity.emvTransType = TransactionType.SALE.code.toByte()
-            emvTransDataEntity.countryCode = Country.MALTA.code.toString() // @todo get from preferences
-            emvTransDataEntity.currencyCode = Currency.EUR.code.toString() // @todo get from preferences
+            emvTransDataEntity.countryCode = Setup.defaultCountryCode.toString()
+            emvTransDataEntity.currencyCode = Setup.getSelectedCurrency().code.toString()
             emvTransDataEntity.termId = Setup.test_deviceID
             emvTransDataEntity.merId = Setup.test_merchantID
             emvTransDataEntity.transDate = SimpleDateFormat(

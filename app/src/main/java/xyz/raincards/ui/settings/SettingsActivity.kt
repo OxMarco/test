@@ -7,12 +7,14 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivitySettingsBinding
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.PRIVACY_POLICY
 import xyz.raincards.utils.Constants.TERMS_OF_SERVICE
+import xyz.raincards.utils.Currency
 import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.extensions.changeLocale
@@ -39,6 +41,11 @@ class SettingsActivity : BaseActivity() {
                 AppCompatDelegate.setDefaultNightMode(
                     if (b) MODE_NIGHT_YES else MODE_NIGHT_NO
                 )
+                val statusBarColor = ContextCompat.getColor(this@SettingsActivity, R.color.bckg)
+                val navigationBarColor = ContextCompat.getColor(this@SettingsActivity, R.color.bckg)
+
+                window.statusBarColor = statusBarColor
+                window.navigationBarColor = navigationBarColor
             }
 
             tipScreenSwitch.isChecked = Preferences.isTipScreenOn()
@@ -63,9 +70,9 @@ class SettingsActivity : BaseActivity() {
 
     private fun showCurrencies() {
         var settingUp = true
-        val adapter = ArrayAdapter(this, R.layout.row_spinner, Setup.currencies)
+        val adapter = ArrayAdapter(this, R.layout.row_spinner, Currency.entries)
         adapter.setDropDownViewResource(R.layout.row_spinner)
-        val index = Setup.currencies.indexOfFirst { it == Preferences.getSelectedCurrency() }
+        val index = Currency.entries.indexOfFirst { it.code == Preferences.getSelectedCurrencyCode() }
 
         binding.currencies.adapter = adapter
         binding.currencies.setSelection(index)
@@ -74,7 +81,7 @@ class SettingsActivity : BaseActivity() {
                 if (settingUp) {
                     settingUp = false
                 } else {
-                    Preferences.saveSelectedCurrency(Setup.currencies[position])
+                    Preferences.saveSelectedCurrency(Currency.entries[position].code)
                 }
             }
 

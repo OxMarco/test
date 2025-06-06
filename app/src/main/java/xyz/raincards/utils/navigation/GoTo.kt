@@ -9,6 +9,7 @@ interface GoTo {
     fun mainScreen()
     fun settingsScreen()
     fun descriptionScreen(launcher: ActivityResultLauncher<Intent>)
+    fun cancelPaymentScreen(launcher: ActivityResultLauncher<Intent>)
 
     fun paymentScreen(
         launcher: ActivityResultLauncher<Intent>,
@@ -23,6 +24,7 @@ interface GoTo {
     )
 
     fun qrCodeScreen(
+        launcher: ActivityResultLauncher<Intent>,
         amount: String,
         description: String
     )

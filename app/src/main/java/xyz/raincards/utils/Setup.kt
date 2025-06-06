@@ -3,6 +3,7 @@ package xyz.raincards.utils
 import xyz.raincards.BuildConfig
 import xyz.raincards.models.GB
 import xyz.raincards.models.Language
+
 // import xyz.raincards.models.MT
 
 object Setup {
@@ -15,13 +16,12 @@ object Setup {
 
     val BASE_URL = if (BuildConfig.IS_DEV) devBaseURL else prodBaseURL
 
-    const val defaultCurrency = "$"
-    const val USD = "$"
-    const val EUR = "€"
-    val currencies = listOf<String>(
-        USD,
-        EUR
-    )
+    val defaultCurrencyCode = Currency.EUR.code
+    fun getSelectedCurrency() = Currency.entries.find {
+        it.code == Preferences.getSelectedCurrencyCode()
+    }!!
+
+    val defaultCountryCode = Country.MALTA.code
 
     const val defaultLanguageCode = GB
     val languages = listOf<Language>(

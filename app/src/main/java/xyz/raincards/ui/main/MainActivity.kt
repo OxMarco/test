@@ -18,6 +18,7 @@ import xyz.raincards.databinding.ActivityMainBinding
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.EXTRA_TOTAL_WITH_TIP
+import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -50,6 +51,7 @@ class MainActivity : BaseActivity() {
 
     private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
         when (result.resultCode) {
+            PAYMENT_CANCELED -> resetPinboard()
             RESULT_OK -> result.data?.let { data ->
                 data.getStringExtra(EXTRA_DESCRIPTION)?.let {
                     desc = it
@@ -122,17 +124,6 @@ class MainActivity : BaseActivity() {
                     inputDigits.deleteAt(inputDigits.length - 1)
                     updateAmountText()
                 }
-            }
-        }
-    }
-
-    private fun showCancelLayout() {
-        binding.cancel.apply {
-            root.isVisible = true
-            noBtn.setOnClickListener { root.isVisible = false }
-            yesBtn.setOnClickListener {
-                root.isVisible = false
-                resetPinboard()
             }
         }
     }

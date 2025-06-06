@@ -19,6 +19,11 @@
 
     <style name="Theme.Nexgo" parent="Base.Theme.Nexgo" />
 
+    <style name="FullScreenAlertDialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/m48</item>

@@ -1,6 +1,9 @@
 package xyz.raincards.ui.login.email
 
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +40,14 @@ class LoginEmailActivity : BaseActivity() {
             sendCodeBtn.setOnClickListener {
                 hideKeyboard()
                 viewModel.login(email.text.toString())
+            }
+
+            email.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendCodeBtn.performClick()
+                    return@setOnEditorActionListener true
+                }
+                false
             }
 
             collectBaseEvents(viewModel, root)

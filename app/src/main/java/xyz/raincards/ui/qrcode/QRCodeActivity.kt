@@ -9,6 +9,7 @@ import xyz.raincards.databinding.ActivityShowQrCodeBinding
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
+import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
@@ -24,6 +25,10 @@ class QRCodeActivity : BaseActivity() {
 
     private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
         when (result.resultCode) {
+            PAYMENT_CANCELED -> {
+                setResult(PAYMENT_CANCELED)
+                finish()
+            }
             RESULT_OK -> result.data?.let { data ->
                 data.getStringExtra(EXTRA_DESCRIPTION)?.let {
                     desc = it
@@ -47,6 +52,9 @@ class QRCodeActivity : BaseActivity() {
         binding.apply {
             amount.text = total.withCurrency()
             card.setOnClickListener { finish() }
+            trash.setOnClickListener {
+                goTo.cancelPaymentScreen(launcher)
+            }
             description.setOnClickListener { goTo.descriptionScreen(launcher) }
             if (desc.isNotEmpty()) {
                 description.text = desc

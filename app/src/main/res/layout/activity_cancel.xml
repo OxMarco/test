@@ -24,7 +24,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/yes_btn"
+            android:id="@+id/cancel_payment_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/btn_height"
             android:layout_weight="1"
@@ -37,7 +37,7 @@
             android:textSize="18sp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/no_btn"
+            android:id="@+id/dismiss_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/btn_height"
             android:layout_marginStart="@dimen/m16"

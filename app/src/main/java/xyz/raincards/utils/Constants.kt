@@ -5,6 +5,8 @@ object Constants {
     const val EXTRA_AMOUNT = "extra_amount"
     const val EXTRA_TOTAL_WITH_TIP = "extra_with_tip"
 
+    const val PAYMENT_CANCELED = 123
+
     // fixme links
     const val PRIVACY_POLICY = "https://www.nexgoglobal.com/smart-pos/n62.html"
     const val TERMS_OF_SERVICE = "https://www.nexgoglobal.com/smart-pos/n62.html"

@@ -22,10 +22,12 @@ class Preferences {
         fun setAccessToken(token: String) {
             preferences.edit { putString(ACCESS_TOKEN, token) }
         }
-        fun getSelectedCurrency() = preferences.getString(CURRENCY, Setup.defaultCurrency).orEmpty()
-        fun saveSelectedCurrency(currency: String) {
-            preferences.edit { putString(CURRENCY, currency) }
+
+        fun getSelectedCurrencyCode() = preferences.getInt(CURRENCY, Setup.defaultCurrencyCode)
+        fun saveSelectedCurrency(currencyCode: Int) {
+            preferences.edit { putInt(CURRENCY, currencyCode) }
         }
+
         fun getSelectedLanguage() = preferences.getString(LANGUAGE, Setup.defaultLanguageCode) ?: ""
         fun saveSelectedLanguage(language: String) {
             preferences.edit { putString(LANGUAGE, language) }
@@ -35,6 +37,7 @@ class Preferences {
         fun setDarkModeOn(on: Boolean) {
             preferences.edit { putBoolean(DARK_MODE_ON, on) }
         }
+
         fun isTipScreenOn() = preferences.getBoolean(TIP_SCREEN_ON, false)
         fun setTipScreenOn(on: Boolean) {
             preferences.edit { putBoolean(TIP_SCREEN_ON, on) }

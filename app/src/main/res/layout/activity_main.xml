@@ -23,7 +23,7 @@
 
     <include
         android:id="@+id/cancel"
-        layout="@layout/layout_cancel"
+        layout="@layout/activity_cancel"
         android:visibility="gone" />
 
     <include
