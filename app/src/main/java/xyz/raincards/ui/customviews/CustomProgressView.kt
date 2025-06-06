@@ -6,7 +6,6 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import xyz.raincards.AndroidApp
 import xyz.raincards.R
 import xyz.raincards.databinding.CustomProgressViewBinding
 
@@ -30,7 +29,7 @@ class CustomProgressView(context: Context, attrs: AttributeSet?) : LinearLayout(
     fun animateProgress() = handler.postDelayed(
         object : Runnable {
             override fun run() {
-                AndroidApp.instance.deviceEngine.beeper?.beep(100) // Beep for 100 milliseconds
+//                AndroidApp.instance.deviceEngine.beeper?.beep(100) // Beep for 100 milliseconds
                 when (counter % 5) {
                     1 -> {
                         binding.step1.setBackgroundResource(R.drawable.shape_circle_empty)

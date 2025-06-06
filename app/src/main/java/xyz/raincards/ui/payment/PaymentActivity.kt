@@ -37,7 +37,6 @@ import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
-import xyz.raincards.utils.Country
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.withCurrency
@@ -77,6 +76,8 @@ class PaymentActivity :
 
         binding = ActivityPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        (application as AndroidApp).deviceEngine.beeper?.beep(1000) // Beep for 100 milliseconds
 
         total = intent.getStringExtra(EXTRA_AMOUNT)!!
         intent.getStringExtra(EXTRA_DESCRIPTION)?.let {
