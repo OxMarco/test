@@ -1,8 +1,12 @@
 package xyz.raincards.ui.payment
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.nexgo.common.LogUtils
 import com.nexgo.oaf.apiv3.DeviceEngine
@@ -32,13 +36,20 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import xyz.raincards.AndroidApp
+import xyz.raincards.R
 import xyz.raincards.databinding.ActivityPaymentBinding
 import xyz.raincards.ui._base.BaseActivity
+import xyz.raincards.ui.customviews.CustomProgressView
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
+import xyz.raincards.utils.Constants.PAYMENT_ERROR
+import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.TransactionType
+import xyz.raincards.utils.extensions.collectBaseEvents
+import xyz.raincards.utils.extensions.collectLifecycleFlow
+import xyz.raincards.utils.extensions.showToast
 import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
@@ -53,6 +64,7 @@ class PaymentActivity :
     lateinit var goTo: GoTo
 
     private lateinit var binding: ActivityPaymentBinding
+    private val viewModel: PaymentViewModel by viewModels()
 
     private lateinit var deviceEngine: DeviceEngine
     private lateinit var emvHandler2: EmvHandler2
@@ -61,6 +73,9 @@ class PaymentActivity :
 
     private var total = ""
     private var desc = ""
+
+    private var cardReadingFinished = false
+    private var cardAnimationFinished = false
 
     private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
         when (result.resultCode) {
@@ -77,19 +92,9 @@ class PaymentActivity :
         binding = ActivityPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        (application as AndroidApp).deviceEngine.beeper?.beep(1000) // Beep for 100 milliseconds
-
         total = intent.getStringExtra(EXTRA_AMOUNT)!!
         intent.getStringExtra(EXTRA_DESCRIPTION)?.let {
             desc = it
-        }
-
-        binding.apply {
-            progress.animateProgress()
-            trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
-            qrCode.setOnClickListener { goTo.qrCodeScreen(launcher, total, desc) }
-            root.isVisible = true
-            amount.text = total.withCurrency()
         }
 
         deviceEngine = (application as AndroidApp).deviceEngine
@@ -99,6 +104,28 @@ class PaymentActivity :
 
         emvHandler2.emvDebugLog(true)
         LogUtils.setDebugEnable(true)
+
+        readCard()
+
+        binding.askForCard.apply {
+            trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
+            qrCode.setOnClickListener { goTo.qrCodeScreen(launcher, total, desc) }
+            amount.text = total.withCurrency()
+            progress.setCustomListener(object : CustomProgressView.Listener {
+                override fun onAnimationFinished() {
+                    cardAnimationFinished = true
+                    charge()
+                }
+            })
+
+            collectBaseEvents(viewModel, binding.root)
+            collectLifecycleFlow(viewModel.events) { event ->
+                when (event) {
+                    is PaymentViewModel.Event.ChargeSuccess -> showChargeSuccess()
+                    is PaymentViewModel.Event.ChargeError -> showChargeError("xyz")
+                }
+            }
+        }
     }
 
     private fun readCard() {
@@ -112,6 +139,9 @@ class PaymentActivity :
     override fun onCardInfo(returnCode: Int, cardInfo: CardInfoEntity?) {
         if (returnCode == SdkResult.Success && cardInfo != null) {
             cardReader.stopSearch()
+
+            (application as AndroidApp).deviceEngine.beeper?.beep(1000)
+            binding.askForCard.progress.animateProgress(500)
 
             val emvTransDataEntity = EmvTransConfigurationEntity()
 
@@ -157,10 +187,11 @@ class PaymentActivity :
     }
 
     override fun onSwipeIncorrect() {
+        showToast(R.string.incorrect_card_swipe_please_try_again)
     }
 
     override fun onMultipleCards() {
-        TODO("Not yet implemented")
+        showToast(R.string.multiple_cards_detected_please_try_again)
     }
 
     override fun onSelApp(
@@ -207,7 +238,7 @@ class PaymentActivity :
     }
 
     override fun onContactlessTapCardAgain() {
-        TODO("Not yet implemented")
+        showToast(R.string.please_tap_card_again)
     }
 
     override fun onOnlineProc() {
@@ -247,26 +278,36 @@ class PaymentActivity :
     }
 
     override fun onFinish(retCode: Int, resultEntity: EmvProcessResultEntity?) {
-        when (retCode) {
-            SdkResult.Success, SdkResult.Emv_Declined, SdkResult.Emv_Success_Arpc_Fail -> {
-            }
-
-            SdkResult.Emv_Card_Block -> {
-                // @todo Alert customer that card is blocked
-            }
-
-            SdkResult.Emv_Qpboc_Online -> {
-                pullUpKeyPad(true)
-            }
-
-            SdkResult.Emv_Cancel, SdkResult.Emv_Communicate_Timeout -> {
-                // @todo End emv activity and close fragment
-            }
-
-            SdkResult.Emv_FallBack -> {
-                // @todo Card error - Give user feedback
-            }
-        }
+        cardReadingFinished = true
+        charge()
+//        when (retCode) {
+//            SdkResult.Success, SdkResult.Emv_Declined, SdkResult.Emv_Success_Arpc_Fail -> {
+//                showToast("success")
+//            }
+//
+//            SdkResult.Emv_Card_Block -> {
+//                showToast("Your card is blocked")
+//                // @todo Alert customer that card is blocked
+//            }
+//
+//            SdkResult.Emv_Qpboc_Online -> {
+//                pullUpKeyPad(true)
+//            }
+//
+//            SdkResult.Emv_Cancel, SdkResult.Emv_Communicate_Timeout -> {
+//                showToast(getString(R.string.transaction_canceled))
+//                finish()
+//                // @todo End emv activity and close fragment
+//            }
+//
+//            SdkResult.Emv_FallBack -> {
+//                showToast(R.string.there_s_been_processing_error_please_try_again)
+//                // @todo Card error - Give user feedback
+//            }
+//            else -> {
+//                showToast(getString(R.string.code_x, retCode))
+//            }
+//        }
     }
 
     override fun onInputResult(retCode: Int, data: ByteArray?) {
@@ -294,4 +335,45 @@ class PaymentActivity :
     }
 
     override fun onSendKey(keyCode: Byte) {}
+
+    private fun showChargeSuccess() {
+        binding.processing.root.isVisible = false
+        binding.success.root.isVisible = true
+        binding.success.amount.text = total.withCurrency()
+        binding.success.chargeBtn.setOnClickListener {
+            setResult(PAYMENT_SUCCESS)
+            finish()
+        }
+    }
+
+    private fun showChargeError(message: String) {
+        binding.processing.root.isVisible = false
+        binding.error.root.isVisible = true
+        binding.error.errorMessage.text = message
+        binding.error.errorImg.setOnClickListener {
+            setResult(PAYMENT_ERROR)
+            finish()
+        }
+    }
+
+    private fun charge() = runOnUiThread {
+        if (cardAnimationFinished && cardReadingFinished) {
+            binding.processing.root.isVisible = true
+            binding.processing.loader.setOnClickListener {
+                showChargeError("Error XYZ")
+            }
+            rotateIndefinitely(binding.processing.loader)
+            binding.askForCard.progress.stopAnimating()
+
+            viewModel.charge("", "", "", "", "")
+        }
+    }
+
+    private fun rotateIndefinitely(view: View) {
+        val animator = ObjectAnimator.ofFloat(view, View.ROTATION, 360f, 0f)
+        animator.duration = 2000 // duration of one full rotation in ms
+        animator.repeatCount = ObjectAnimator.INFINITE
+        animator.interpolator = AccelerateDecelerateInterpolator()
+        animator.start()
+    }
 }

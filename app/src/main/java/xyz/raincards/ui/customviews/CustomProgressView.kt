@@ -11,6 +11,16 @@ import xyz.raincards.databinding.CustomProgressViewBinding
 
 class CustomProgressView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
+    private var _listener: Listener? = null
+
+    interface Listener {
+        fun onAnimationFinished()
+    }
+
+    fun setCustomListener(listener: Listener) {
+        _listener = listener
+    }
+
     private val handler = Handler(Looper.getMainLooper())
     private var counter = 1
 
@@ -24,13 +34,18 @@ class CustomProgressView(context: Context, attrs: AttributeSet?) : LinearLayout(
         counter = 1
     }
 
-    private val delay = 1500L
-
-    fun animateProgress() = handler.postDelayed(
+    fun animateProgress(delay: Long) = handler.postDelayed(
         object : Runnable {
             override fun run() {
-//                AndroidApp.instance.deviceEngine.beeper?.beep(100) // Beep for 100 milliseconds
                 when (counter % 5) {
+                    0 -> {
+                        binding.step1.setBackgroundResource(R.drawable.shape_circle_full)
+                        binding.step2.setBackgroundResource(R.drawable.shape_circle_full)
+                        binding.step3.setBackgroundResource(R.drawable.shape_circle_full)
+                        binding.step4.setBackgroundResource(R.drawable.shape_circle_full)
+                        _listener?.onAnimationFinished()
+                    }
+
                     1 -> {
                         binding.step1.setBackgroundResource(R.drawable.shape_circle_empty)
                         binding.step2.setBackgroundResource(R.drawable.shape_circle_full)
@@ -57,13 +72,6 @@ class CustomProgressView(context: Context, attrs: AttributeSet?) : LinearLayout(
                         binding.step2.setBackgroundResource(R.drawable.shape_circle_empty)
                         binding.step3.setBackgroundResource(R.drawable.shape_circle_empty)
                         binding.step4.setBackgroundResource(R.drawable.shape_circle_empty)
-                    }
-
-                    0 -> {
-                        binding.step1.setBackgroundResource(R.drawable.shape_circle_full)
-                        binding.step2.setBackgroundResource(R.drawable.shape_circle_full)
-                        binding.step3.setBackgroundResource(R.drawable.shape_circle_full)
-                        binding.step4.setBackgroundResource(R.drawable.shape_circle_full)
                     }
                 }
 

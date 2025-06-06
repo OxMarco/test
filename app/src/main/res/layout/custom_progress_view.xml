@@ -20,19 +20,19 @@
         android:layout_width="@dimen/m48"
         android:layout_height="@dimen/m48"
         android:layout_marginEnd="@dimen/m16"
-        android:background="@drawable/shape_circle_empty" />
+        android:background="@drawable/shape_circle_full" />
 
     <View
         android:id="@+id/step_3"
         android:layout_width="@dimen/m48"
         android:layout_height="@dimen/m48"
         android:layout_marginEnd="@dimen/m16"
-        android:background="@drawable/shape_circle_empty" />
+        android:background="@drawable/shape_circle_full" />
 
     <View
         android:id="@+id/step_4"
         android:layout_width="@dimen/m48"
         android:layout_height="@dimen/m48"
-        android:background="@drawable/shape_circle_empty" />
+        android:background="@drawable/shape_circle_full" />
 
 </LinearLayout>

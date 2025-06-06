@@ -1,91 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="@dimen/m16">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <include
+        android:id="@+id/ask_for_card"
+        layout="@layout/layout_ask_for_card" />
 
-        <ImageView
-            android:id="@+id/trash"
-            android:layout_width="@dimen/m48"
-            android:layout_height="@dimen/m48"
-            android:src="@drawable/img_trash"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primary" />
+    <include
+        android:id="@+id/processing"
+        layout="@layout/layout_processing"
+        android:visibility="gone" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+    <include
+        android:id="@+id/success"
+        layout="@layout/layout_transactions_success"
+        android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/qr_code"
-            android:layout_width="@dimen/m48"
-            android:layout_height="@dimen/m48"
-            android:src="@drawable/img_qr"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primary" />
-    </LinearLayout>
+    <include
+        android:id="@+id/error"
+        layout="@layout/layout_transactions_error"
+        android:visibility="gone" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m16"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:textSize="40sp"
-        app:fontFamily="@font/poppins_semi_bold"
-        app:layout_constraintBottom_toTopOf="@id/card"
-        app:layout_constraintTop_toBottomOf="@id/trash"
-        tools:text="1.00" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <ImageView
-        android:id="@+id/card"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/card"
-        app:tint="@color/primary" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tap_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m16"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/tap_insert_or_swipe_to_pay"
-        android:textColor="@color/small_txt"
-        app:fontFamily="@font/poppins_semi_bold"
-        app:layout_constraintTop_toBottomOf="@id/card" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <xyz.raincards.ui.customviews.CustomProgressView
-        android:id="@+id/progress"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/m16"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card" />
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

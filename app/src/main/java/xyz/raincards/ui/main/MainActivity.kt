@@ -1,9 +1,6 @@
 package xyz.raincards.ui.main
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -19,6 +16,8 @@ import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.EXTRA_TOTAL_WITH_TIP
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
+import xyz.raincards.utils.Constants.PAYMENT_ERROR
+import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -51,7 +50,9 @@ class MainActivity : BaseActivity() {
 
     private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
         when (result.resultCode) {
+            PAYMENT_SUCCESS -> resetPinboard()
             PAYMENT_CANCELED -> resetPinboard()
+            PAYMENT_ERROR -> resetPinboard()
             RESULT_OK -> result.data?.let { data ->
                 data.getStringExtra(EXTRA_DESCRIPTION)?.let {
                     desc = it
@@ -84,10 +85,10 @@ class MainActivity : BaseActivity() {
 
         collectBaseEvents(viewModel, binding.root)
         collectLifecycleFlow(viewModel.events) { event ->
-            when (event) {
-                is MainViewModel.Event.ChargeSuccess -> showChargeSuccess()
-                is MainViewModel.Event.ChargeError -> showChargeError("xyz")
-            }
+//            when (event) {
+//                is MainViewModel.Event.ChargeSuccess -> showChargeSuccess()
+//                is MainViewModel.Event.ChargeError -> showChargeError("xyz")
+//            }
         }
     }
 
@@ -142,39 +143,7 @@ class MainActivity : BaseActivity() {
         binding.pinboard.amount.text = total.withCurrency()
     }
 
-    private fun showChargeSuccess() {
-        binding.processing.root.isVisible = false
-        binding.success.root.isVisible = true
-        binding.success.amount.text = total.withCurrency()
-        binding.success.chargeBtn.setOnClickListener { resetPinboard() }
-    }
-
-    private fun showChargeError(message: String) {
-        binding.processing.root.isVisible = false
-        binding.error.root.isVisible = true
-        binding.error.errorMessage.text = message
-        binding.error.errorImg.setOnClickListener { resetPinboard() }
-    }
-
-    private fun charge() {
-        binding.processing.root.isVisible = true
-        rotateIndefinitely(binding.processing.loader)
-
-        viewModel.charge("", "", "", "", "")
-    }
-
-    private fun rotateIndefinitely(view: View) {
-        val animator = ObjectAnimator.ofFloat(view, View.ROTATION, 360f, 0f)
-        animator.duration = 2000 // duration of one full rotation in ms
-        animator.repeatCount = ObjectAnimator.INFINITE
-        animator.interpolator = AccelerateDecelerateInterpolator()
-        animator.start()
-    }
-
     private fun resetPinboard() {
-        binding.success.root.isVisible = false
-        binding.pinboard.root.isVisible = true
-
         inputDigits.clear()
         updateAmountText()
 

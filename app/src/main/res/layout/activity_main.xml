@@ -3,28 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
-
-    <include
-        android:id="@+id/processing"
-        layout="@layout/layout_processing"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/success"
-        layout="@layout/layout_transactions_success"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/error"
-        layout="@layout/layout_transactions_error"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/cancel"
-        layout="@layout/activity_cancel"
-        android:visibility="gone" />
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/pinboard"

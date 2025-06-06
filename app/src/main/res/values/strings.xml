@@ -48,4 +48,10 @@
     <string name="no">No</string>
     <string name="scan_to_pay">Scan to pay</string>
     <string name="app_name" translatable="false">RainPOS</string>
+    <string name="incorrect_card_swipe_please_try_again">Incorrect card swipe, please try again</string>
+    <string name="multiple_cards_detected_please_try_again">Multiple cards detected, please try again</string>
+    <string name="please_tap_card_again">Please tap card again</string>
+    <string name="transaction_canceled">Transaction canceled</string>
+    <string name="there_s_been_processing_error_please_try_again">There\'s been processing error, please try again</string>
+    <string name="code_x">Code: %d</string>
 </resources>
