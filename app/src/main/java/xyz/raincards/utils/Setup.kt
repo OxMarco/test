@@ -3,6 +3,8 @@ package xyz.raincards.utils
 import xyz.raincards.BuildConfig
 import xyz.raincards.models.GB
 import xyz.raincards.models.Language
+import xyz.raincards.models.enums.Country
+import xyz.raincards.models.enums.Currency
 
 // import xyz.raincards.models.MT
 

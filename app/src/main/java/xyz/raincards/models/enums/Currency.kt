@@ -1,4 +1,4 @@
-package xyz.raincards.utils
+package xyz.raincards.models.enums
 
 enum class Currency(
     val code: Int,

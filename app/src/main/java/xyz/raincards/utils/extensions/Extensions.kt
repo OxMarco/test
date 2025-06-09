@@ -16,7 +16,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import xyz.raincards.BuildConfig
 import xyz.raincards.R
-import xyz.raincards.utils.Currency
+import xyz.raincards.models.enums.Currency
 import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.Setup.test_deviceID

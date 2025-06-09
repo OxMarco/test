@@ -11,10 +11,10 @@ import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivitySettingsBinding
+import xyz.raincards.models.enums.Currency
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.PRIVACY_POLICY
 import xyz.raincards.utils.Constants.TERMS_OF_SERVICE
-import xyz.raincards.utils.Currency
 import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.extensions.changeLocale

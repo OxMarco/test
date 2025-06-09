@@ -3,17 +3,21 @@ package xyz.raincards.utils
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import java.util.Locale
 import xyz.raincards.AndroidApp
 
 class Preferences {
     companion object {
-        private const val PREFS = "PREFS"
+
+        private val PREFS = "PREFS"
         private const val DARK_MODE_ON = "DARK_MODE_ON"
         private const val TIP_SCREEN_ON = "TIP_SCREEN_ON"
         private const val AUTO_PRINT_RECEIPT_ON = "AUTO_PRINT_RECEIPT_ON"
         private const val CURRENCY = "CURRENCY"
         private const val LANGUAGE = "LANGUAGE"
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
+
+        private const val TRANSMISSION_ID = "TRANSMISSION_ID"
 
         private val preferences: SharedPreferences
             get() = AndroidApp.instance.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -46,6 +50,21 @@ class Preferences {
         fun isAutoPrintReceiptOn() = preferences.getBoolean(AUTO_PRINT_RECEIPT_ON, false)
         fun setAutoPrintReceiptOn(on: Boolean) {
             preferences.edit { putBoolean(AUTO_PRINT_RECEIPT_ON, on) }
+        }
+
+        fun getTransmissionID() = String.format(
+            Locale.UK,
+            "%02d",
+            preferences.getInt(TRANSMISSION_ID, 0)
+        )
+
+        fun incrementTransmissionID() {
+            val id = preferences.getInt(TRANSMISSION_ID, 0)
+            if (id == 99) {
+                preferences.edit { putInt(TRANSMISSION_ID, 0) }
+            } else {
+                preferences.edit { putInt(TRANSMISSION_ID, id + 1) }
+            }
         }
 
         fun clearPreferences() = preferences.edit { clear() }
