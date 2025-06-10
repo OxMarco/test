@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-29T14:54:44.728249Z">
+        <DropdownSelection timestamp="2025-06-09T13:52:58.167511Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=.android/avd/New_Device_2.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/miloslalatovic/.android/avd/Nexgo_N62.avd" />
             </handle>
           </Target>
         </DropdownSelection>

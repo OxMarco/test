@@ -147,8 +147,11 @@ dependencies {
     ksp libs.androidx.room.compiler
     implementation libs.androidx.room.ktx
 
+    //gson
+    implementation libs.gson
+
     //tlv decoder
-    implementation 'io.github.binaryfoo:emv-bertlv:0.1.8'
+    implementation libs.emv.bertlv
 
     // Nexgo
     implementation(name: 'nexgo-smartpos-sdk-v3.08.006_20241216', ext: 'aar', group: 'nexgo', version: 'v3.08.006')

@@ -19,7 +19,10 @@ import com.nexgo.oaf.apiv3.device.reader.CardInfoEntity
 import com.nexgo.oaf.apiv3.device.reader.CardReader
 import com.nexgo.oaf.apiv3.device.reader.CardSlotTypeEnum
 import com.nexgo.oaf.apiv3.device.reader.OnCardInfoListener
+import com.nexgo.oaf.apiv3.device.reader.ReaderTypeEnum
+import com.nexgo.oaf.apiv3.emv.AidEntity
 import com.nexgo.oaf.apiv3.emv.CandidateAppInfoEntity
+import com.nexgo.oaf.apiv3.emv.CapkEntity
 import com.nexgo.oaf.apiv3.emv.EmvDataSourceEnum
 import com.nexgo.oaf.apiv3.emv.EmvEntryModeEnum
 import com.nexgo.oaf.apiv3.emv.EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACTLESS
@@ -45,6 +48,7 @@ import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
+import xyz.raincards.utils.EmvUtils
 import xyz.raincards.utils.Setup
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.collectBaseEvents
@@ -70,6 +74,7 @@ class PaymentActivity :
     private lateinit var emvHandler2: EmvHandler2
     private lateinit var cardReader: CardReader
     private lateinit var pinPad: PinPad
+    private lateinit var emvUtils: EmvUtils
 
     private var total = ""
     private var desc = ""
@@ -106,6 +111,10 @@ class PaymentActivity :
         LogUtils.setDebugEnable(true)
 
         readCard()
+        emvHandler2.initReader(ReaderTypeEnum.INNER, 0)
+        emvUtils = EmvUtils(this)
+        initEmvAid()
+        initEmvCapk()
 
         binding.askForCard.apply {
             trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
@@ -182,6 +191,8 @@ class PaymentActivity :
 
             emvHandler2.emvProcess(emvTransDataEntity, this)
         } else if (returnCode == SdkResult.TimeOut) {
+            // card not detected
+            finish()
         } else if (returnCode == SdkResult.Fail) {
         }
     }
@@ -208,7 +219,6 @@ class PaymentActivity :
     }
 
     override fun onConfirmCardNo(p0: CardInfoEntity?) {
-        TODO("Not yet implemented")
     }
 
     override fun onCardHolderInputPin(isOnlinePin: Boolean, leftTimes: Int) {
@@ -304,6 +314,10 @@ class PaymentActivity :
 //                showToast(R.string.there_s_been_processing_error_please_try_again)
 //                // @todo Card error - Give user feedback
 //            }
+//        SdkResult.Emv_Candidatelist_Empty -> {
+//            showToast("No supported card application found.")
+//            finish()
+//        }
 //            else -> {
 //                showToast(getString(R.string.code_x, retCode))
 //            }
@@ -375,5 +389,40 @@ class PaymentActivity :
         animator.repeatCount = ObjectAnimator.INFINITE
         animator.interpolator = AccelerateDecelerateInterpolator()
         animator.start()
+    }
+
+    private fun initEmvAid() {
+        emvHandler2.delAllAid()
+        if (emvHandler2.getAidListNum() <= 0) {
+            val aidEntityList: MutableList<AidEntity?>? = emvUtils.aidList
+            if (aidEntityList == null) {
+                Log.d("nexgo", "initAID failed")
+                return
+            }
+
+            val i = emvHandler2.setAidParaList<AidEntity?>(aidEntityList)
+            Log.d("nexgo", "setAidParaList " + i)
+//            showMessage("setAidParaList: " + (if (i == SdkResult.Success) "success" else "ret:" + i))
+        } else {
+            Log.d("nexgo", "setAidParaList " + "already load aid")
+        }
+    }
+
+    private fun initEmvCapk() {
+        emvHandler2.delAllCapk()
+        val capk_num = emvHandler2.getCapkListNum()
+        Log.d("nexgo", "capk_num " + capk_num)
+        if (capk_num <= 0) {
+            val capkEntityList: MutableList<CapkEntity?>? = emvUtils.capkList
+            if (capkEntityList == null) {
+                Log.d("nexgo", "initCAPK failed")
+                return
+            }
+            val j = emvHandler2.setCAPKList<CapkEntity?>(capkEntityList)
+            Log.d("nexgo", "setCAPKList " + j)
+//            showMessage("setCAPKList: " + (if (j == SdkResult.Success) "success" else "ret:" + j))
+        } else {
+            Log.d("nexgo", "setCAPKList " + "already load capk")
+        }
     }
 }
