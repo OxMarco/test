@@ -9,11 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import xyz.raincards.R
 import xyz.raincards.databinding.ActivityTipBinding
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.EXTRA_TOTAL_WITH_TIP
+import xyz.raincards.utils.Setup
 import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
@@ -81,6 +83,8 @@ class TipActivity : BaseActivity() {
                 total = (total.toDouble() + customTip.text.toString().toDouble()).toString()
                 goBackToPayment()
             }
+
+            subtitle.text = getString(R.string.enter_the_amount_in_x, Setup.getSelectedCurrency().symbol)
 
             customTip.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {

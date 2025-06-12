@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/title"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/m32"
+    android:layout_height="@dimen/settings_row_height"
     android:gravity="center_vertical"
     android:includeFontPadding="true"
     android:maxLength="3"

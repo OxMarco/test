@@ -10,6 +10,7 @@
     tools:visibility="visible">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -17,6 +18,15 @@
         android:textSize="32sp"
         app:fontFamily="@font/poppins_semi_bold"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/custom_tip"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/custom_tip"

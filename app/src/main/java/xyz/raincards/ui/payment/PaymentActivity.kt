@@ -50,6 +50,7 @@ import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.EmvUtils
 import xyz.raincards.utils.Setup
+import xyz.raincards.utils.Setup.searchCardTimeout
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -89,6 +90,13 @@ class PaymentActivity :
                 finish()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        emvHandler2.emvProcessAbort()
+        deviceEngine.getCPUCardHandler(CardSlotTypeEnum.RF).powerOff()
+        deviceEngine.getCPUCardHandler(CardSlotTypeEnum.ICC1).powerOff()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,7 +150,7 @@ class PaymentActivity :
         slotTypes.add(CardSlotTypeEnum.ICC1)
         slotTypes.add(CardSlotTypeEnum.RF)
 
-        cardReader.searchCard(slotTypes, 60, this)
+        cardReader.searchCard(slotTypes, searchCardTimeout, this)
     }
 
     override fun onCardInfo(returnCode: Int, cardInfo: CardInfoEntity?) {
@@ -191,8 +199,8 @@ class PaymentActivity :
 
             emvHandler2.emvProcess(emvTransDataEntity, this)
         } else if (returnCode == SdkResult.TimeOut) {
-            // card not detected
-            finish()
+            cardReader.stopSearch()
+            showChargeError(getString(R.string.card_not_found))
         } else if (returnCode == SdkResult.Fail) {
         }
     }
@@ -360,11 +368,11 @@ class PaymentActivity :
         }
     }
 
-    private fun showChargeError(message: String) {
+    private fun showChargeError(message: String) = runOnUiThread {
         binding.processing.root.isVisible = false
         binding.error.root.isVisible = true
         binding.error.errorMessage.text = message
-        binding.error.errorImg.setOnClickListener {
+        binding.error.root.setOnClickListener {
             setResult(PAYMENT_ERROR)
             finish()
         }

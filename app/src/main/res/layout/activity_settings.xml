@@ -50,8 +50,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/dark_mode"
                     android:textColor="@color/small_txt"
@@ -59,8 +59,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/tip_screen"
                     android:textColor="@color/small_txt"
@@ -68,8 +68,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/auto_print_receipt"
                     android:textColor="@color/small_txt"
@@ -77,8 +77,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/language"
                     android:textColor="@color/small_txt"
@@ -86,8 +86,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/currency"
                     android:textColor="@color/small_txt"
@@ -95,8 +95,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/settings"
                     android:textColor="@color/small_txt"
@@ -104,8 +104,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/privacy_policy"
                     android:textColor="@color/small_txt"
@@ -113,8 +113,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="center_vertical|end"
                     android:text="@string/terms_of_service"
                     android:textColor="@color/small_txt"
@@ -132,48 +132,53 @@
                     android:id="@+id/dark_mode_switch"
                     style="@style/Switch"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
                     android:layout_gravity="center_vertical|start"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_marginTop="@dimen/m16"
                     android:checked="true" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/tip_screen_switch"
                     style="@style/Switch"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
                     android:layout_gravity="center_vertical|start"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_marginTop="@dimen/m16"
                     android:checked="true" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/print_switch"
                     style="@style/Switch"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
                     android:layout_gravity="center_vertical|start"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_marginTop="@dimen/m16"
                     android:checked="true" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/languages"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
-                    android:spinnerMode="dropdown"/>
+                    android:paddingEnd="@dimen/m24"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
+                    android:layout_marginEnd="@dimen/m16"
+                    android:background="@drawable/custom_spinner"
+                    android:spinnerMode="dropdown" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/currencies"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
-                    android:spinnerMode="dropdown"/>
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
+                    android:paddingEnd="@dimen/m24"
+                    android:background="@drawable/custom_spinner"
+                    android:spinnerMode="dropdown" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/settings"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="start|center_vertical"
                     android:text="@string/open"
                     android:textColor="@color/primary"
@@ -182,8 +187,8 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/privacy_policy"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="start|center_vertical"
                     android:text="@string/view"
                     android:textColor="@color/primary"
@@ -192,8 +197,8 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/terms"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/m32"
-                    android:layout_marginTop="@dimen/m32"
+                    android:layout_height="@dimen/settings_row_height"
+                    android:layout_marginTop="@dimen/m16"
                     android:gravity="start|center_vertical"
                     android:text="@string/view"
                     android:textColor="@color/primary"

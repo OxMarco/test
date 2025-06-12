@@ -27,7 +27,7 @@
     <string name="_10">10%</string>
     <string name="custom_ntip">Custom\ntip</string>
     <string name="no_tip">No tip</string>
-    <string name="custom_tip">custom tip</string>
+    <string name="custom_tip">Custom Tip</string>
     <string name="payment_description">Payment Description</string>
     <string name="ok" translatable="false">OK</string>
     <string name="settings">Settings</string>
@@ -54,4 +54,6 @@
     <string name="transaction_canceled">Transaction canceled</string>
     <string name="there_s_been_processing_error_please_try_again">There\'s been processing error, please try again</string>
     <string name="code_x">Code: %d</string>
+    <string name="card_not_found">Card not found</string>
+    <string name="enter_the_amount_in_x">Enter the amount in %s</string>
 </resources>

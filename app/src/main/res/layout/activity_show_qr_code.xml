@@ -35,9 +35,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:layout_marginTop="@dimen/m16"
         android:textSize="40sp"
         app:fontFamily="@font/poppins_semi_bold"
-        app:layout_constraintBottom_toTopOf="@id/qr_code"
         app:layout_constraintTop_toBottomOf="@id/trash"
         tools:text="1.00" />
 
@@ -51,7 +51,7 @@
         android:text="@string/add_description"
         android:textColor="@color/small_txt"
         app:layout_constraintTop_toBottomOf="@id/amount"
-        android:textSize="18sp" />
+        android:textSize="@dimen/add_description_text_size" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tap_card"
@@ -70,14 +70,13 @@
         android:layout_width="0dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:layout_height="wrap_content"
-        android:src="@drawable/img_qr"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/m24"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        app:tint="@color/primary" />
+        app:layout_constraintTop_toBottomOf="@id/description"
+        app:layout_constraintWidth_percent="0.5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

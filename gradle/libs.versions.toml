@@ -1,6 +1,7 @@
 [versions]
 agp = "8.10.0"
 annotations = "23.0.0"
+zxing = "3.5.2"
 emvBertlv = "0.1.8"
 hiltAndroidVersion = "2.56.2"
 gson = "2.11.0"
@@ -29,6 +30,7 @@ retrofit = "2.9.0"
 roomRuntime = "2.7.1"
 
 [libraries]
+zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
 emv-bertlv = { module = "io.github.binaryfoo:emv-bertlv", version.ref = "emvBertlv" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

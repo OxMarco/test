@@ -4,6 +4,7 @@
     <color name="accent">#00A6FF</color>
     <color name="text">#000000</color>
     <color name="bckg">#F6F6F6</color>
+    <color name="bckg_80">#F6F6F6CC</color>
     <color name="header">#000000</color>
     <color name="small_txt">#9A9A9A</color>
 </resources>

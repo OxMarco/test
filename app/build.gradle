@@ -155,6 +155,8 @@ dependencies {
 
     // Nexgo
     implementation(name: 'nexgo-smartpos-sdk-v3.08.006_20241216', ext: 'aar', group: 'nexgo', version: 'v3.08.006')
+
+    implementation libs.zxing // Use the latest version
 }
 
 repositories {

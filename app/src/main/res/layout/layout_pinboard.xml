@@ -61,7 +61,8 @@
         android:gravity="center"
         android:includeFontPadding="false"
         android:text="@string/add_description"
-        android:textColor="@color/small_txt" />
+        android:textColor="@color/small_txt"
+        android:textSize="@dimen/add_description_text_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -216,12 +217,13 @@
             app:fontFamily="@font/poppins_semi_bold" />
 
         <ImageView
-            android:padding="@dimen/m8"
-            android:src="@drawable/img_back_space"            android:id="@+id/btn_x"
+            android:id="@+id/btn_x"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="@dimen/m8"
+            android:src="@drawable/img_back_space"
             app:fontFamily="@font/poppins_semi_bold"
             app:tint="@color/primary" />
     </LinearLayout>

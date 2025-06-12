@@ -29,4 +29,7 @@
     <dimen name="switch_radius">30dp</dimen>
     <dimen name="switch_thumb_padding">2dp</dimen>
 
+    <dimen name="add_description_text_size">22sp</dimen>
+    <dimen name="settings_row_height">48dp</dimen>
+
 </resources>

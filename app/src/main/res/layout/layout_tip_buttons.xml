@@ -28,7 +28,7 @@
         android:includeFontPadding="false"
         android:text="@string/add_description"
         android:textColor="@color/small_txt"
-        android:textSize="18sp" />
+        android:textSize="@dimen/add_description_text_size"/>
 
     <LinearLayout
         android:layout_width="match_parent"
