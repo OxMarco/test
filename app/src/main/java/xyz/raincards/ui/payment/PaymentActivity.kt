@@ -484,9 +484,12 @@ class PaymentActivity :
         Log.d("payment", "---onSendKey---")
     }
 
-    private fun showChargeSuccess() = runOnUiThread {
+    private fun showChargeSuccess(txt: String? = null) = runOnUiThread {
         binding.processing.root.isVisible = false
         binding.success.root.isVisible = true
+        txt?.let {
+            binding.success.txt.text = it
+        }
         binding.success.amount.text = total.withCurrency()
         binding.success.chargeBtn.setOnClickListener {
             setResult(PAYMENT_SUCCESS)
