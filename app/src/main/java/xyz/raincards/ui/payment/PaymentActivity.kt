@@ -41,7 +41,6 @@ import xyz.raincards.databinding.ActivityPaymentBinding
 import xyz.raincards.models.enums.Country
 import xyz.raincards.models.enums.Currency
 import xyz.raincards.ui._base.BaseActivity
-import xyz.raincards.ui.customviews.CustomProgressView
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
@@ -125,12 +124,12 @@ class PaymentActivity :
             trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
             qrCode.setOnClickListener { goTo.qrCodeScreen(launcher, total, desc) }
             amount.text = total.withCurrency()
-            progress.setCustomListener(object : CustomProgressView.Listener {
+            /*progress.setCustomListener(object : CustomProgressView.Listener {
                 override fun onAnimationFinished() {
                     cardAnimationFinished = true
                     charge()
                 }
-            })
+            })*/
 
             collectBaseEvents(viewModel, binding.root)
             collectLifecycleFlow(viewModel.events) { event ->
@@ -371,6 +370,8 @@ class PaymentActivity :
             "getEmvCardDataInfo: " + Gson().toJson(emvHandler2.emvCardDataInfo)
         )*/
 
+        // @todo handle errors
+        /*
         when (retCode) {
             SdkResult.Emv_Success_Arpc_Fail, SdkResult.Success, SdkResult.Emv_Script_Fail -> {}
             SdkResult.Emv_Qpboc_Offline, SdkResult.Emv_Offline_Accept -> {}
@@ -388,65 +389,70 @@ class PaymentActivity :
             SdkResult.Emv_Terminate -> {}
             else -> {}
         }
+        */
 
-        val tags = arrayOf(
-            // ── EMV Cryptography ───────────────────────────────────────────────────────
-            "9f26", // Application Cryptogram
-            "9f27", // Cryptogram Information Data
-            "9f10", // Issuer Application Data
+        if (retCode == SdkResult.Success) {
+            val tags = arrayOf(
+                // ── EMV Cryptography ───────────────────────────────────────────────────────
+                "9f26", // Application Cryptogram
+                "9f27", // Cryptogram Information Data
+                "9f10", // Issuer Application Data
 
-            // ── Unpredictable & Counters ──────────────────────────────────────────────
-            "9f37", // Unpredictable Number
-            "9f36", // Application Transaction Counter (ATC)
+                // ── Unpredictable & Counters ──────────────────────────────────────────────
+                "9f37", // Unpredictable Number
+                "9f36", // Application Transaction Counter (ATC)
 
-            // ── Terminal Risk Management ──────────────────────────────────────────────
-            "95", // Terminal Verification Results (TVR)
-            "9f1a", // Terminal Country Code
-            "9f33", // Terminal Capabilities
-            "9f35", // Terminal Type
-            "9f1e", // Interface Device (IFD) Serial Number
+                // ── Terminal Risk Management ──────────────────────────────────────────────
+                "95", // Terminal Verification Results (TVR)
+                "9f1a", // Terminal Country Code
+                "9f33", // Terminal Capabilities
+                "9f35", // Terminal Type
+                "9f1e", // Interface Device (IFD) Serial Number
 
-            // ── Transaction Details ───────────────────────────────────────────────────
-            "9a", // Transaction Date
-            "9c", // Transaction Type
-            "9f02", // Amount, Authorized (Numeric)
-            "9f03", // Amount, Other (Numeric)
-            "9f41", // Transaction Sequence Counter
+                // ── Transaction Details ───────────────────────────────────────────────────
+                "9a", // Transaction Date
+                "9c", // Transaction Type
+                "9f02", // Amount, Authorized (Numeric)
+                "9f03", // Amount, Other (Numeric)
+                "9f41", // Transaction Sequence Counter
 
-            // ── Application Identification & Processing ───────────────────────────────
-            "82", // Application Interchange Profile (AIP)
-            "84", // Dedicated File (DF) Name (AID)
-            "9f09", // Application Version Number
-            "9f34", // Cardholder Verification Method (CVM) Results
+                // ── Application Identification & Processing ───────────────────────────────
+                "82", // Application Interchange Profile (AIP)
+                "84", // Dedicated File (DF) Name (AID)
+                "9f09", // Application Version Number
+                "9f34", // Cardholder Verification Method (CVM) Results
 
-            // ── Currency & Country ────────────────────────────────────────────────────
-            "5f2a", // Transaction Currency Code (ISO 4217)
-            "9f42", // Application Currency Code (ISO 4217)
-            "9f44", // Application Currency Exponent
+                // ── Currency & Country ────────────────────────────────────────────────────
+                "5f2a", // Transaction Currency Code (ISO 4217)
+                "9f42", // Application Currency Code (ISO 4217)
+                "9f44", // Application Currency Exponent
 
-            // ── Card & Issuer Data ────────────────────────────────────────────────────
-            "5a", // Application PAN (Primary Account Number)
-            "5f34", // PAN Sequence Number
-            "5f20", // Cardholder Name
-            "9f0b", // Cardholder Name Extended
-            "5f2c", // Cardholder Nationality
-            "5f2b", // Date of Birth (YYMMDD)
-            "5f2d", // Language Preference (ISO 639 code)
-            "5f24", // Application Expiration Date (YYMMDD)
-            "5f25", // Application Effective Date (YYMMDD)
-            "42", // Issuer Identification Number (IIN)
-            "9f11", // Issuer Code Table Index
-            "5f28", // Issuer Country Code (numeric ISO 3166)
-            "5f55", // Issuer Country Code (alpha-2)
-            "5f56" // Issuer Country Code (alpha-3)
-        )
+                // ── Card & Issuer Data ────────────────────────────────────────────────────
+                "5a", // Application PAN (Primary Account Number)
+                "5f34", // PAN Sequence Number
+                "5f20", // Cardholder Name
+                "9f0b", // Cardholder Name Extended
+                "5f2c", // Cardholder Nationality
+                "5f2b", // Date of Birth (YYMMDD)
+                "5f2d", // Language Preference (ISO 639 code)
+                "5f24", // Application Expiration Date (YYMMDD)
+                "5f25", // Application Effective Date (YYMMDD)
+                "42", // Issuer Identification Number (IIN)
+                "9f11", // Issuer Code Table Index
+                "5f28", // Issuer Country Code (numeric ISO 3166)
+                "5f55", // Issuer Country Code (alpha-2)
+                "5f56" // Issuer Country Code (alpha-3)
+            )
 
-        val data = emvHandler2.getTlvByTags(tags)
-        Log.d("payment", "tlv data: $data")
+            val data = emvHandler2.getTlvByTags(tags)
+            Log.d("payment", "tlv data: $data")
+            showChargeSuccess()
+        } else {
+            showChargeError("Payment failed")
+        }
+
         emvHandler2.emvProcessAbort()
-
         cardReadingFinished = true
-        charge()
     }
 
     override fun onInputResult(retCode: Int, data: ByteArray?) {
@@ -484,7 +490,7 @@ class PaymentActivity :
         binding.success.amount.text = total.withCurrency()
         binding.success.chargeBtn.setOnClickListener {
             setResult(PAYMENT_SUCCESS)
-            finish()
+            // finish()
         }
     }
 
@@ -494,7 +500,7 @@ class PaymentActivity :
         binding.error.errorMessage.text = message
         binding.error.root.setOnClickListener {
             setResult(PAYMENT_ERROR)
-            finish()
+            // finish()
         }
     }
 
