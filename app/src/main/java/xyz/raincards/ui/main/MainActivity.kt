@@ -108,7 +108,7 @@ class MainActivity : BaseActivity() {
                 }
             }
             settings.setOnClickListener { goTo.settingsScreen() }
-            description.setOnClickListener { goTo.descriptionScreen(launcher) }
+            description.setOnClickListener { goTo.descriptionScreen(launcher, desc) }
 
             listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn00)
                 .forEach { btn ->

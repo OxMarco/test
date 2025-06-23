@@ -34,6 +34,8 @@ import com.nexgo.oaf.apiv3.emv.EmvTransConfigurationEntity
 import com.nexgo.oaf.apiv3.emv.OnEmvProcessListener2
 import com.nexgo.oaf.apiv3.emv.PromptEnum
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -99,6 +101,22 @@ class PaymentActivity :
         deviceEngine.getCPUCardHandler(CardSlotTypeEnum.ICC1).powerOff()
     }
 
+    private fun enableLogging() {
+        emvHandler2.emvDebugLog(true)
+        LogUtils.setDebugEnable(true)
+
+        val path = getExternalFilesDir(null)!!.absolutePath + "/" + "sample_emvlog_fail"
+        val file = File(path)
+        val z = file.isFile
+        println(z.toString())
+
+        try {
+            Runtime.getRuntime().exec("logcat -v time -f $path")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -115,8 +133,7 @@ class PaymentActivity :
         cardReader = deviceEngine.cardReader
         pinPad = deviceEngine.pinPad
 
-        emvHandler2.emvDebugLog(true)
-        LogUtils.setDebugEnable(true)
+//        enableLogging()
 
         readCard()
         emvHandler2.initReader(ReaderTypeEnum.INNER, 0)

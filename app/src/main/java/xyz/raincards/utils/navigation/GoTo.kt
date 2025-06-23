@@ -4,11 +4,17 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 
 interface GoTo {
+
     fun loginEmailScreen()
     fun loginCodeScreen()
     fun mainScreen()
     fun settingsScreen()
-    fun descriptionScreen(launcher: ActivityResultLauncher<Intent>)
+
+    fun descriptionScreen(
+        launcher: ActivityResultLauncher<Intent>,
+        description: String
+    )
+
     fun cancelPaymentScreen(launcher: ActivityResultLauncher<Intent>)
 
     fun paymentScreen(

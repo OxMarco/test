@@ -57,7 +57,7 @@ class TipActivity : BaseActivity() {
             if (desc.isNotEmpty()) {
                 description.text = desc
             }
-            description.setOnClickListener { goTo.descriptionScreen(launcher) }
+            description.setOnClickListener { goTo.descriptionScreen(launcher, desc) }
 
             noTipBtn.setOnClickListener { goBackToPayment() }
 

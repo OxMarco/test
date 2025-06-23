@@ -55,10 +55,11 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
     )
 
     override fun descriptionScreen(
-        launcher: ActivityResultLauncher<Intent>
+        launcher: ActivityResultLauncher<Intent>,
+        description: String
     ) = launcher.launch(
         Intent(activity, DescriptionActivity::class.java).apply {
-//            putExtra(EXTRA_AFTER_LOGIN, afterLogin)
+            putExtra(EXTRA_DESCRIPTION, description)
         }
     )
 

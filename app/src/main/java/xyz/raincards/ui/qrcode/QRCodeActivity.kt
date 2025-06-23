@@ -66,7 +66,7 @@ class QRCodeActivity : BaseActivity() {
             trash.setOnClickListener {
                 goTo.cancelPaymentScreen(launcher)
             }
-            description.setOnClickListener { goTo.descriptionScreen(launcher) }
+            description.setOnClickListener { goTo.descriptionScreen(launcher, desc) }
             if (desc.isNotEmpty()) {
                 description.text = desc
             }
@@ -77,7 +77,7 @@ class QRCodeActivity : BaseActivity() {
         binding.qrCode.setImageBitmap(qrCodeBitmap)
     }
 
-    fun generateQRCode(text: String, size: Int = 512): Bitmap {
+    private fun generateQRCode(text: String, size: Int = 512): Bitmap {
         val hints = mapOf(EncodeHintType.CHARACTER_SET to "UTF-8")
         val bitMatrix: BitMatrix = MultiFormatWriter().encode(
             text,

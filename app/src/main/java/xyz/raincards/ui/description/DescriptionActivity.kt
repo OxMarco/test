@@ -27,6 +27,10 @@ class DescriptionActivity : BaseActivity() {
         setContentView(binding.root)
 
         binding.apply {
+            intent.getStringExtra(EXTRA_DESCRIPTION)?.let {
+                description.setText(it)
+            }
+
             description.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     okBtn.performClick()
