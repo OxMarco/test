@@ -3,110 +3,134 @@ package xyz.raincards.utils
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import com.nexgo.oaf.apiv3.emv.AidEntity
 import com.nexgo.oaf.apiv3.emv.AidEntryModeEnum
 import com.nexgo.oaf.apiv3.emv.CapkEntity
-import java.io.FileInputStream
+import com.nexgo.oaf.apiv3.emv.EmvHandler2
 import java.io.IOException
-import java.io.InputStream
-import org.w3c.dom.Element
 
-/**
- * cn.nexgo.inbas.components.emv
- * Author: zhaojiangon 2018/1/31 17:31.
- * Modified by Brad2018/4/23 : add test file
- */
-class EmvUtils(val context: Context) {
+class EmvUtils(private val context: Context) {
+    private fun getCapkList(): List<CapkEntity>? {
+        val capkList: MutableList<CapkEntity> = ArrayList()
+        val jsonArray = JsonParser.parseString(readAssetsText("emv_capk.json")).asJsonArray ?: return null
 
-    val capkList: MutableList<CapkEntity?>?
-        get() {
-            val capkEntityList: MutableList<CapkEntity?> = ArrayList<CapkEntity?>()
-            val gson = Gson()
-            val parser = JsonParser()
-
-            val jsonArray = parser.parse(readAssetsTxt("emv_capk.json")).getAsJsonArray()
-
-            if (jsonArray == null) {
-                return null
-            }
-
-            for (user in jsonArray) {
-                val userBean = gson.fromJson<CapkEntity?>(user, CapkEntity::class.java)
-                capkEntityList.add(userBean)
-            }
-            return capkEntityList
+        for (user in jsonArray) {
+            val userBean = Gson().fromJson(user, CapkEntity::class.java)
+            capkList.add(userBean)
         }
 
-    val aidList: MutableList<AidEntity?>?
-        get() {
-            val aidEntityList: MutableList<AidEntity?> = ArrayList<AidEntity?>()
-            val gson = Gson()
-            val parser = JsonParser()
-            val jsonArray: JsonArray?
+        return capkList
+    }
 
-            jsonArray =
-                parser.parse(readAssetsTxt("emv_aid.json")).getAsJsonArray()
+    fun getAidList(): List<AidEntity>? {
+        val aidEntityList: MutableList<AidEntity> = ArrayList()
+        val jsonArray = JsonParser.parseString(readAssetsText("inbas_aid.json")).asJsonArray ?: return null
 
-            if (jsonArray == null) {
-                return null
+        for (user in jsonArray) {
+            val userBean = Gson().fromJson(user, AidEntity::class.java)
+            val jsonObject = user.asJsonObject
+
+            if (jsonObject != null && jsonObject["emvEntryMode"] != null) {
+                val emvEntryMode = jsonObject["emvEntryMode"].asInt
+
+                userBean.aidEntryModeEnum = AidEntryModeEnum.entries.toTypedArray()[emvEntryMode]
+                Log.d("payment", "Emv entry mode - ${ userBean.aidEntryModeEnum }")
             }
-
-            for (user in jsonArray) {
-                val userBean = gson.fromJson<AidEntity>(user, AidEntity::class.java)
-                val jsonObject = user.getAsJsonObject()
-                if (jsonObject != null) {
-                    if (jsonObject.get("emvEntryMode") != null) {
-                        val emvEntryMode = jsonObject.get("emvEntryMode").getAsInt()
-                        userBean.setAidEntryModeEnum(AidEntryModeEnum.entries[emvEntryMode])
-                        Log.d("nexgo", "emvEntryMode" + userBean.getAidEntryModeEnum())
-                    }
-                }
-
-                aidEntityList.add(userBean)
-            }
-            return aidEntityList
+            aidEntityList.add(userBean)
         }
 
-    private fun readAssetsTxt(fileName: String): String? {
+        return aidEntityList
+    }
+
+    fun initializeEmvAid(emvHandler2: EmvHandler2) {
+        emvHandler2.delAllAid()
+
+        if (emvHandler2.aidListNum <= 0) {
+            val emvAidList = getAidList()
+
+            if (emvAidList != null) {
+                val initResult = emvHandler2.setAidParaList(emvAidList)
+                Log.d("payment", "Init AID List result - $initResult")
+            } else {
+                Log.e("payment", "Init AID List failed")
+                return
+            }
+        } else {
+            Log.w("rooter", "AID List already loaded")
+        }
+    }
+
+    fun initializeEmvCapk(emvHandler2: EmvHandler2) {
+        emvHandler2.delAllCapk()
+
+        if (emvHandler2.capkListNum <= 0) {
+            val capkList = getCapkList()
+
+            if (capkList != null) {
+                val initResult = emvHandler2.setCAPKList(capkList)
+                Log.d("payment", "Init CAPK List result - $initResult")
+            } else {
+                Log.e("payment", "Init CAPK List failed")
+                return
+            }
+        } else {
+            Log.w("rooter", "CAPK List already loaded")
+        }
+    }
+
+    private fun readAssetsText(fileName: String): String? {
         try {
-            val `is`: InputStream = context.getAssets().open(fileName)
+            val inputStream = context.assets.open(fileName)
+            val size = inputStream.available()
 
-            val size = `is`.available()
             // Read the entire asset into a local byte buffer.
             val buffer = ByteArray(size)
-            `is`.read(buffer)
-            `is`.close()
-            // Convert the buffer into a string.
-            return String(buffer, charset("utf-8"))
-        } catch (e: IOException) {
-            e.printStackTrace()
+            inputStream.read(buffer)
+            inputStream.close()
+
+            // convert the buffer into a string
+            return String(buffer)
+        } catch (ex: IOException) {
+            ex.printStackTrace()
         }
         return null
     }
 
-    private fun readFile(filePath: String?): String? {
-        try {
-            val `is`: InputStream = FileInputStream(filePath)
-            val size = `is`.available()
-            // Read the entire asset into a local byte buffer.
-            val buffer = ByteArray(size)
-            `is`.read(buffer)
-            `is`.close()
-            // Convert the buffer into a string.
-            return String(buffer, charset("utf-8"))
-        } catch (e: IOException) {
-            e.printStackTrace()
+    fun maskCreditCardNumber(cardNumber: String): String {
+        val startIndex = 7 // 8th digit
+        val endIndex = 11 // 12th digit
+
+        val maskedDigits = cardNumber.substring(startIndex, endIndex + 1).replace("\\d".toRegex(), "*")
+        val maskedCardNumber = StringBuilder(cardNumber).apply {
+            replace(startIndex, endIndex + 1, maskedDigits)
         }
-        return null
+
+        return maskedCardNumber.toString()
     }
 
-    private fun getElementAttr(element: Element?, attr: String?): String? {
-        if (element == null) return ""
-        if (element.hasAttribute(attr)) {
-            return element.getAttribute(attr)
+    fun getAppLabel(
+        issuerCodeTableIndex: String,
+        appLabel: String?,
+        appPreferredName: String
+    ): String? {
+        var appLabelResult: String? = null
+
+        if (issuerCodeTableIndex.isEmpty()) {
+            appLabelResult = appLabel
+            return appLabelResult
         }
-        return ""
+
+        if (issuerCodeTableIndex.toInt() == 1) {
+            if (appPreferredName.isEmpty()) {
+                appLabelResult = appLabel
+            } else {
+                appLabelResult = appPreferredName
+            }
+        } else {
+            appLabelResult = appLabel
+        }
+
+        return appLabelResult
     }
 }
