@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.nexgo.common.ByteUtils
+import com.nexgo.common.LogUtils
 import com.nexgo.oaf.apiv3.DeviceEngine
 import com.nexgo.oaf.apiv3.SdkResult
 import com.nexgo.oaf.apiv3.device.pinpad.OnPinPadInputListener
