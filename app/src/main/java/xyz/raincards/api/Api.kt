@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 import xyz.raincards.models.requests.ChargeRequest
 import xyz.raincards.models.requests.CodeRequest
 import xyz.raincards.models.requests.LoginRequest
@@ -31,6 +32,7 @@ interface Api {
 
     @POST("charge")
     suspend fun charge(
+        @Url url: String,
         @Body request: ChargeRequest
     ): Response<ChargeResponse>
 }

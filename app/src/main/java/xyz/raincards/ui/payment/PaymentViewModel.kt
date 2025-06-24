@@ -6,6 +6,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import xyz.raincards.api.BinRouter
+import xyz.raincards.models.enums.BANK
+import xyz.raincards.models.requests.ChargeRequest
 import xyz.raincards.ui._base.BaseEvent
 import xyz.raincards.ui._base.BaseEventsViewModel
 
@@ -15,21 +18,31 @@ class PaymentViewModel @Inject constructor(
 ) : BaseEventsViewModel() {
 
     fun charge(
-        card: String,
-        amount: String,
-        currency: String,
+        cardNumber: String,
+        total: String,
         pan: String,
-        aid: String
+        desc: String
     ) = viewModelScope.launch {
-//        val request = ChargeRequest(card, amount, currency, pan, aid)
-//        executeWithCommonErrorHandling(
-//            showLoading = false,
-//            apiCall = { repository.charge(request) },
-//            onSuccess = { response ->
-//                val message = response.message
-//                _eventChannel.send(Event.ChargeSuccess)
-//            }
-//        )
+        when (val bank = BinRouter.getBank(cardNumber)) {
+            BANK.RAIN -> {
+                println("-----send charge request to RAIN")
+
+                val request = ChargeRequest(cardNumber, total.replace(".", ""), pan, desc)
+                executeWithCommonErrorHandling(
+                    showLoading = false,
+                    apiCall = { repository.charge(bank.url, request) },
+                    onSuccess = { response ->
+                        val message = response.message
+                        _eventChannel.send(Event.ChargeSuccess)
+                    }
+                )
+            }
+
+            BANK.CKB -> {
+                println("-----start socket connection to CKB")
+                // socket connection
+            }
+        }
 
         // viewModelScope.launch {
         // delay(3000)

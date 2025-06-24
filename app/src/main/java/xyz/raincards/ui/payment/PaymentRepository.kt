@@ -14,9 +14,9 @@ class PaymentRepository @Inject constructor(
 //    private val database: AppDatabase
 ) : BaseDataSource() {
 
-    suspend fun charge(request: ChargeRequest) = flow {
+    suspend fun charge(url: String, request: ChargeRequest) = flow {
         emit(Resource.Loading())
-        val result = safeApiCall { api.charge(request) }
+        val result = safeApiCall { api.charge(url, request) }
         emit(result)
     }.flowOn(Dispatchers.IO)
 }

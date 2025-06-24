@@ -44,6 +44,7 @@ import xyz.raincards.databinding.ActivityPaymentBinding
 import xyz.raincards.models.enums.Country
 import xyz.raincards.models.enums.Currency
 import xyz.raincards.ui._base.BaseActivity
+import xyz.raincards.ui.customviews.CustomProgressView
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
@@ -77,6 +78,8 @@ class PaymentActivity :
 
     private var total = ""
     private var desc = ""
+    private var cardNumber = ""
+    private var pan = ""
 
     private var existSlot: CardSlotTypeEnum? = null
     private var cardReadingFinished = false
@@ -144,12 +147,12 @@ class PaymentActivity :
             trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
             qrCode.setOnClickListener { goTo.qrCodeScreen(launcher, total, desc) }
             amount.text = total.withCurrency()
-            /*progress.setCustomListener(object : CustomProgressView.Listener {
+            progress.setCustomListener(object : CustomProgressView.Listener {
                 override fun onAnimationFinished() {
                     cardAnimationFinished = true
                     charge()
                 }
-            })*/
+            })
 
             collectBaseEvents(viewModel, binding.root)
             collectLifecycleFlow(viewModel.events) { event ->
@@ -171,6 +174,8 @@ class PaymentActivity :
 
     override fun onCardInfo(retCode: Int, cardInfo: CardInfoEntity) {
         Log.d("payment", "---onCardInfo---")
+
+        binding.askForCard.progress.animateProgress(200)
 
         if (retCode == SdkResult.Success) {
             cardReader.stopSearch()
@@ -272,6 +277,8 @@ class PaymentActivity :
 
         Log.d("payment", "card number: " + cardInfo.cardNo)
 
+        cardNumber = cardInfo.cardNo
+
         emvHandler2.onSetConfirmCardNoResponse(true)
     }
 
@@ -361,6 +368,7 @@ class PaymentActivity :
 
     override fun onFinish(retCode: Int, entity: EmvProcessResultEntity?) {
         Log.d("payment", "---onFinish---")
+        cardReadingFinished = true
 
         var flag = false
         val aid = emvHandler2.getTlv(byteArrayOf(0x4F), EmvDataSourceEnum.FROM_KERNEL)
@@ -464,15 +472,18 @@ class PaymentActivity :
                 "5f56" // Issuer Country Code (alpha-3)
             )
 
-            val data = emvHandler2.getTlvByTags(tags)
-            Log.d("payment", "tlv data: $data")
-            showChargeSuccess()
+            val tlvData = emvHandler2.getTlvByTags(tags)
+            Log.d("payment", "tlv data: $tlvData")
+
+            val tlv_5A = emvHandler2.getTlv(byteArrayOf(0x5A.toByte()), EmvDataSourceEnum.FROM_KERNEL)
+            pan = ByteUtils.byteArray2HexString(tlv_5A)
+
+            charge()
         } else {
             showChargeError("Payment failed")
         }
 
         emvHandler2.emvProcessAbort()
-        cardReadingFinished = true
     }
 
     override fun onInputResult(retCode: Int, data: ByteArray?) {
@@ -531,13 +542,15 @@ class PaymentActivity :
         if (cardAnimationFinished && cardReadingFinished) {
             (application as AndroidApp).beep(500)
             binding.processing.root.isVisible = true
-            binding.processing.loader.setOnClickListener {
-                showChargeError("Error XYZ")
-            }
+//            binding.processing.loader.setOnClickListener {
+//                showChargeError("Error XYZ")
+//            }
             rotateIndefinitely(binding.processing.loader)
+            cardAnimationFinished = false
+            cardReadingFinished = false
             binding.askForCard.progress.stopAnimating()
 
-            viewModel.charge("", "", "", "", "")
+            viewModel.charge(cardNumber, total, pan, desc)
         }
     }
 
