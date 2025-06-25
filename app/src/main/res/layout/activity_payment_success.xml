@@ -74,7 +74,7 @@
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/charge_btn"
+        android:id="@+id/ok_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/btn_height"
         android:layout_marginTop="@dimen/m16"

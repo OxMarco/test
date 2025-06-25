@@ -23,6 +23,15 @@ interface GoTo {
         description: String
     )
 
+    fun paymentSuccessScreen(
+        amount: String,
+        message: String?
+    )
+
+    fun paymentErrorScreen(
+        message: String?
+    )
+
     fun tipScreen(
         launcher: ActivityResultLauncher<Intent>,
         amount: String,

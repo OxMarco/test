@@ -10,11 +10,13 @@ import xyz.raincards.ui.login.code.LoginCodeActivity
 import xyz.raincards.ui.login.email.LoginEmailActivity
 import xyz.raincards.ui.main.MainActivity
 import xyz.raincards.ui.payment.PaymentActivity
+import xyz.raincards.ui.payment.success.PaymentSuccessActivity
 import xyz.raincards.ui.qrcode.QRCodeActivity
 import xyz.raincards.ui.settings.SettingsActivity
 import xyz.raincards.ui.tip.TipActivity
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
+import xyz.raincards.utils.Constants.EXTRA_MESSAGE
 
 class GoToImplementation @Inject constructor(private val activity: Activity) : GoTo {
     override fun loginEmailScreen() {
@@ -53,6 +55,21 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
             putExtra(EXTRA_AMOUNT, amount)
         }
     )
+
+    override fun paymentErrorScreen(message: String?) {
+        Intent(activity, SettingsActivity::class.java).apply {
+            putExtra(EXTRA_MESSAGE, message)
+            activity.startActivity(this)
+        }
+    }
+
+    override fun paymentSuccessScreen(amount: String, message: String?) {
+        Intent(activity, PaymentSuccessActivity::class.java).apply {
+            putExtra(EXTRA_AMOUNT, amount)
+            putExtra(EXTRA_MESSAGE, message)
+            activity.startActivity(this)
+        }
+    }
 
     override fun descriptionScreen(
         launcher: ActivityResultLauncher<Intent>,

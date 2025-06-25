@@ -1,6 +1,7 @@
 package xyz.raincards.ui.payment
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -47,6 +48,7 @@ import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.ui.customviews.CustomProgressView
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
+import xyz.raincards.utils.Constants.EXTRA_MESSAGE
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
@@ -523,26 +525,18 @@ class PaymentActivity :
     }
 
     private fun showChargeSuccess(txt: String? = null) = runOnUiThread {
-        binding.processing.root.isVisible = false
-        binding.success.root.isVisible = true
-        txt?.let {
-            binding.success.txt.text = it
-        }
-        binding.success.amount.text = total.withCurrency()
-        binding.success.chargeBtn.setOnClickListener {
-            setResult(PAYMENT_SUCCESS)
-            finish()
-        }
+        val intent = Intent()
+        intent.putExtra(EXTRA_MESSAGE, txt)
+        intent.putExtra(EXTRA_AMOUNT, total.withCurrency())
+        setResult(PAYMENT_SUCCESS, intent)
+        finish()
     }
 
     private fun showChargeError(message: String) = runOnUiThread {
-        binding.processing.root.isVisible = false
-        binding.error.root.isVisible = true
-        binding.error.errorMessage.text = message
-        binding.error.root.setOnClickListener {
-            setResult(PAYMENT_ERROR)
-            finish()
-        }
+        val intent = Intent()
+        intent.putExtra(EXTRA_MESSAGE, message)
+        setResult(PAYMENT_ERROR, intent)
+        finish()
     }
 
     private fun charge() = runOnUiThread {

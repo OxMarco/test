@@ -2,6 +2,7 @@ package xyz.raincards.utils
 
 object Constants {
 
+    const val EXTRA_MESSAGE = "extra_message"
     const val EXTRA_DESCRIPTION = "extra_desc"
     const val EXTRA_AMOUNT = "extra_amount"
     const val EXTRA_TOTAL_WITH_TIP = "extra_with_tip"

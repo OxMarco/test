@@ -13,7 +13,9 @@ import kotlin.getValue
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivityMainBinding
 import xyz.raincards.ui._base.BaseActivity
+import xyz.raincards.utils.Constants.EXTRA_AMOUNT
 import xyz.raincards.utils.Constants.EXTRA_DESCRIPTION
+import xyz.raincards.utils.Constants.EXTRA_MESSAGE
 import xyz.raincards.utils.Constants.EXTRA_TOTAL_WITH_TIP
 import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Constants.PAYMENT_ERROR
@@ -50,9 +52,23 @@ class MainActivity : BaseActivity() {
 
     private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
         when (result.resultCode) {
-            PAYMENT_SUCCESS -> resetPinboard()
-            PAYMENT_CANCELED -> resetPinboard()
-            PAYMENT_ERROR -> resetPinboard()
+            PAYMENT_SUCCESS -> {
+                resetPinboard()
+                goTo.paymentSuccessScreen(
+                    result.data!!.getStringExtra(EXTRA_AMOUNT)!!,
+                    result.data!!.getStringExtra(EXTRA_MESSAGE)
+                )
+            }
+
+            PAYMENT_ERROR -> {
+                resetPinboard()
+                goTo.paymentErrorScreen(result.data!!.getStringExtra(EXTRA_MESSAGE))
+            }
+
+            PAYMENT_CANCELED -> {
+                resetPinboard()
+            }
+
             RESULT_OK -> result.data?.let { data ->
                 data.getStringExtra(EXTRA_DESCRIPTION)?.let {
                     desc = it
