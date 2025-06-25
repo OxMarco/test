@@ -16,11 +16,8 @@ object BinRouter {
         45498800..45498800 to BANK.RAIN,
 
         // RS-13 through RS-18 on base 45492406
-        45492406..45492505 to BANK.RAIN,
+        45492406..45492505 to BANK.RAIN
 
-        53209499..53209499 to BANK.CKB,
-
-        41746596..41746596 to BANK.CKB
     )
 
     private fun lookupIssuer(bin: Int) = binRangesToIssuer.firstOrNull { bin in it.first }?.second

@@ -23,7 +23,7 @@ abstract class BaseDataSource {
             } else {
                 val error = response.errorBody()?.string()
                 val errorResponse = Gson().fromJson(error, ResponseError::class.java)
-                Resource.Error(errorResponse.message)
+                Resource.Error(errorResponse.message?.get(0))
             }
         } catch (e: Exception) {
             if (e is NoConnectivityException) {

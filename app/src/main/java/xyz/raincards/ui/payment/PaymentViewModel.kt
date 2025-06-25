@@ -31,6 +31,9 @@ class PaymentViewModel @Inject constructor(
                 executeWithCommonErrorHandling(
                     showLoading = false,
                     apiCall = { repository.charge(bank.url, request) },
+                    onError = { error ->
+                        _eventChannel.send(Event.ChargeError(error))
+                    },
                     onSuccess = { response ->
                         val id = response.id
                         _eventChannel.send(Event.ChargeSuccess(id))
