@@ -30,7 +30,7 @@ interface Api {
         @Query("code") code: String
     ): Response<CodeResponse>
 
-    @POST("charge")
+    @POST
     suspend fun charge(
         @Url url: String,
         @Body request: ChargeRequest

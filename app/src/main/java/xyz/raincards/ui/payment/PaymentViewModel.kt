@@ -20,20 +20,20 @@ class PaymentViewModel @Inject constructor(
     fun charge(
         cardNumber: String,
         total: String,
-        pan: String,
+//        pan: String,
         desc: String
     ) = viewModelScope.launch {
         when (val bank = BinRouter.getBank(cardNumber)) {
             BANK.RAIN -> {
                 println("-----send charge request to RAIN")
 
-                val request = ChargeRequest(cardNumber, total.replace(".", ""), pan, desc)
+                val request = ChargeRequest(cardNumber, total.replace(".", ""), desc)
                 executeWithCommonErrorHandling(
                     showLoading = false,
                     apiCall = { repository.charge(bank.url, request) },
                     onSuccess = { response ->
-                        val message = response.message
-                        _eventChannel.send(Event.ChargeSuccess)
+                        val id = response.id
+                        _eventChannel.send(Event.ChargeSuccess(id))
                     }
                 )
             }
@@ -41,6 +41,8 @@ class PaymentViewModel @Inject constructor(
             BANK.CKB -> {
                 println("-----start socket connection to CKB")
                 // socket connection
+
+                _eventChannel.send(Event.ChargeError("Connection to CKB not yet implemented"))
             }
         }
 
@@ -54,7 +56,7 @@ class PaymentViewModel @Inject constructor(
     val events = _eventChannel.receiveAsFlow()
 
     sealed class Event : BaseEvent() {
-        data object ChargeSuccess : Event()
-        data object ChargeError : Event()
+        data class ChargeSuccess(val message: String) : Event()
+        data class ChargeError(val message: String) : Event()
     }
 }

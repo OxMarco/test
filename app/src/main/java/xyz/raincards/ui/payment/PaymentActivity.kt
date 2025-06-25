@@ -51,6 +51,9 @@ import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.EmvUtils
+import xyz.raincards.utils.Setup.BEEP_LENGTH
+import xyz.raincards.utils.Setup.CIRCLE_ANIMATION_LENGTH
+import xyz.raincards.utils.Setup.SEARCH_CARD_TIMEOUT
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -157,8 +160,8 @@ class PaymentActivity :
             collectBaseEvents(viewModel, binding.root)
             collectLifecycleFlow(viewModel.events) { event ->
                 when (event) {
-                    is PaymentViewModel.Event.ChargeSuccess -> showChargeSuccess()
-                    is PaymentViewModel.Event.ChargeError -> showChargeError("xyz")
+                    is PaymentViewModel.Event.ChargeSuccess -> showChargeSuccess(event.message)
+                    is PaymentViewModel.Event.ChargeError -> showChargeError(event.message)
                 }
             }
         }
@@ -169,13 +172,13 @@ class PaymentActivity :
 
         slotTypes.add(CardSlotTypeEnum.ICC1)
         slotTypes.add(CardSlotTypeEnum.RF)
-        cardReader.searchCard(slotTypes, 5000, this); // @todo make timeout configurable
+        cardReader.searchCard(slotTypes, SEARCH_CARD_TIMEOUT, this)
     }
 
     override fun onCardInfo(retCode: Int, cardInfo: CardInfoEntity) {
         Log.d("payment", "---onCardInfo---")
 
-        binding.askForCard.progress.animateProgress(200)
+        binding.askForCard.progress.animateProgress(CIRCLE_ANIMATION_LENGTH)
 
         if (retCode == SdkResult.Success) {
             cardReader.stopSearch()
@@ -348,12 +351,15 @@ class PaymentActivity :
             PromptEnum.OFFLINE_PIN_CORRECT -> {
                 Log.d("payment", "PIN Accepted")
             }
+
             PromptEnum.OFFLINE_PIN_INCORRECT -> {
                 Log.d("payment", "Invalid PIN")
             }
+
             PromptEnum.OFFLINE_PIN_INCORRECT_TRY_AGAIN -> {
                 Log.d("payment", "Invalid PIN, TRY AGAIN")
             }
+
             else -> Log.d("payment", "Error")
         }
 
@@ -475,8 +481,8 @@ class PaymentActivity :
             val tlvData = emvHandler2.getTlvByTags(tags)
             Log.d("payment", "tlv data: $tlvData")
 
-            val tlv_5A = emvHandler2.getTlv(byteArrayOf(0x5A.toByte()), EmvDataSourceEnum.FROM_KERNEL)
-            pan = ByteUtils.byteArray2HexString(tlv_5A)
+//            val tlv_5A = emvHandler2.getTlv(byteArrayOf(0x5A.toByte()), EmvDataSourceEnum.FROM_KERNEL)
+//            pan = ByteUtils.byteArray2HexString(tlv_5A)
 
             charge()
         } else {
@@ -495,7 +501,7 @@ class PaymentActivity :
                     val temp = ByteArray(8)
                     System.arraycopy(data, 0, temp, 0, 8)
 
-                    Log.d("payment", "Pin Data - ${ ByteUtils.byteArray2HexString(data) }")
+                    Log.d("payment", "Pin Data - ${ByteUtils.byteArray2HexString(data)}")
                 }
 
                 // (var1 = whether valid input / success, var2 = pin bypass)
@@ -540,7 +546,7 @@ class PaymentActivity :
 
     private fun charge() = runOnUiThread {
         if (cardAnimationFinished && cardReadingFinished) {
-            (application as AndroidApp).beep(500)
+            (application as AndroidApp).beep(BEEP_LENGTH)
             binding.processing.root.isVisible = true
 //            binding.processing.loader.setOnClickListener {
 //                showChargeError("Error XYZ")
@@ -550,7 +556,13 @@ class PaymentActivity :
             cardReadingFinished = false
             binding.askForCard.progress.stopAnimating()
 
-            viewModel.charge(cardNumber, total, pan, desc)
+            viewModel.charge(
+//                validRAINcard,
+                cardNumber,
+                total,
+//                pan,
+                desc.ifEmpty { "empty" }
+            )
         }
     }
 
