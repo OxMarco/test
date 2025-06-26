@@ -26,8 +26,11 @@ class PaymentViewModel @Inject constructor(
         when (val bank = BinRouter.getBank(cardNumber)) {
             BANK.RAIN -> {
                 println("-----send charge request to RAIN")
-
-                val request = ChargeRequest(cardNumber, total.replace(".", ""), desc)
+                val request = ChargeRequest(
+                    cardNumber,
+                    total.replace(".", ""),
+                    desc
+                )
                 executeWithCommonErrorHandling(
                     showLoading = false,
                     apiCall = { repository.charge(bank.url, request) },

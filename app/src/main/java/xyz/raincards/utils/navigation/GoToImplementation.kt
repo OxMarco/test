@@ -10,6 +10,7 @@ import xyz.raincards.ui.login.code.LoginCodeActivity
 import xyz.raincards.ui.login.email.LoginEmailActivity
 import xyz.raincards.ui.main.MainActivity
 import xyz.raincards.ui.payment.PaymentActivity
+import xyz.raincards.ui.payment.error.PaymentErrorActivity
 import xyz.raincards.ui.payment.success.PaymentSuccessActivity
 import xyz.raincards.ui.qrcode.QRCodeActivity
 import xyz.raincards.ui.settings.SettingsActivity
@@ -57,7 +58,7 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
     )
 
     override fun paymentErrorScreen(message: String?) {
-        Intent(activity, SettingsActivity::class.java).apply {
+        Intent(activity, PaymentErrorActivity::class.java).apply {
             putExtra(EXTRA_MESSAGE, message)
             activity.startActivity(this)
         }

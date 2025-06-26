@@ -22,8 +22,12 @@ abstract class BaseDataSource {
                 }
             } else {
                 val error = response.errorBody()?.string()
-                val errorResponse = Gson().fromJson(error, ResponseError::class.java)
-                Resource.Error(errorResponse.message?.get(0))
+                if (error?.contains("message") == true) {
+                    val errorResponse = Gson().fromJson(error, ResponseError::class.java)
+                    Resource.Error(errorResponse.message?.get(0))
+                } else {
+                    Resource.Error(error ?: "empty response")
+                }
             }
         } catch (e: Exception) {
             if (e is NoConnectivityException) {
