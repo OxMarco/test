@@ -56,7 +56,6 @@ import xyz.raincards.utils.EmvUtils
 import xyz.raincards.utils.Setup.BEEP_LENGTH
 import xyz.raincards.utils.Setup.CIRCLE_ANIMATION_LENGTH
 import xyz.raincards.utils.Setup.SEARCH_CARD_TIMEOUT
-import xyz.raincards.utils.Setup.validRAINcard
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -111,7 +110,7 @@ class PaymentActivity :
         emvHandler2.emvDebugLog(true)
         LogUtils.setDebugEnable(true)
 
-        val path = getExternalFilesDir(null)!!.absolutePath + "/" + "sample_emvlog_fail"
+        val path = getExternalFilesDir(null)!!.absolutePath + "/" + "sample_emvlog"
         val file = File(path)
         val z = file.isFile
         println(z.toString())
@@ -139,7 +138,7 @@ class PaymentActivity :
         pinPad = (application as AndroidApp).pinPad
         cardReader = deviceEngine.cardReader
 
-//        enableLogging()
+        enableLogging()
         emvHandler2.emvDebugLog(true)
         emvHandler2.initReader(ReaderTypeEnum.INNER, 0)
 
@@ -552,8 +551,8 @@ class PaymentActivity :
             binding.askForCard.progress.stopAnimating()
 
             viewModel.charge(
-                validRAINcard,
-//                cardNumber,
+//                validRAINcard,
+                cardNumber,
                 total,
 //                pan,
                 desc.ifEmpty { "empty" }
