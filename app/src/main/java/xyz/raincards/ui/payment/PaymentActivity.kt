@@ -43,7 +43,6 @@ import xyz.raincards.AndroidApp
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivityPaymentBinding
 import xyz.raincards.models.enums.Country
-import xyz.raincards.models.enums.Currency
 import xyz.raincards.ui._base.BaseActivity
 import xyz.raincards.ui.customviews.CustomProgressView
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
@@ -53,6 +52,7 @@ import xyz.raincards.utils.Constants.PAYMENT_CANCELED
 import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.EmvUtils
+import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.Setup.BEEP_LENGTH
 import xyz.raincards.utils.Setup.CIRCLE_ANIMATION_LENGTH
 import xyz.raincards.utils.Setup.SEARCH_CARD_TIMEOUT
@@ -182,54 +182,61 @@ class PaymentActivity :
 
         binding.askForCard.progress.animateProgress(CIRCLE_ANIMATION_LENGTH)
 
-        if (retCode == SdkResult.Success) {
-            cardReader.stopSearch()
+        when (retCode) {
+            SdkResult.Success -> {
+                cardReader.stopSearch()
 
-            existSlot = cardInfo.cardExistslot
+                existSlot = cardInfo.cardExistslot
 
-            val transData = EmvTransConfigurationEntity()
-            transData.transAmount = "000000000100"
-            // transData.setCashbackAmount("000000000100"); //if support cashback amount
-            transData.emvTransType = TransactionType.SALE.code.toByte()
-            transData.countryCode = Country.MALTA.code.toString()
-            transData.currencyCode = Currency.EUR.code.toString()
-            transData.termId = "6177B523"
-            transData.merId = "2ISW1234567TEST"
-            transData.transDate =
-                SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
-            transData.transTime =
-                SimpleDateFormat("hhmmss", Locale.getDefault()).format(Date())
-            transData.traceNo = "00000000"
+                val formattedAmount = total.replace(".", "").padStart(12, '0')
 
-            transData.emvProcessFlowEnum = EmvProcessFlowEnum.EMV_PROCESS_FLOW_STANDARD
+                val transData = EmvTransConfigurationEntity()
+                transData.transAmount = formattedAmount
+                // transData.setCashbackAmount("000000000100"); //if support cashback amount
+                transData.emvTransType = TransactionType.SALE.code.toByte()
+                transData.countryCode = Country.MALTA.code.toString()
+                transData.currencyCode = Preferences.getSelectedCurrencyCode().toString()
+                transData.termId = "6177B523"
+                transData.merId = "2ISW1234567TEST"
+                transData.transDate =
+                    SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
+                transData.transTime =
+                    SimpleDateFormat("hhmmss", Locale.getDefault()).format(Date())
+                transData.traceNo = "00000000"
 
-            when (cardInfo.cardExistslot) {
-                CardSlotTypeEnum.ICC1 -> {
-                    transData.emvEntryModeEnum = EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACT
+                transData.emvProcessFlowEnum = EmvProcessFlowEnum.EMV_PROCESS_FLOW_STANDARD
+
+                when (cardInfo.cardExistslot) {
+                    CardSlotTypeEnum.ICC1 -> {
+                        transData.emvEntryModeEnum = EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACT
+                    }
+
+                    CardSlotTypeEnum.RF -> {
+                        transData.emvEntryModeEnum = EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACTLESS
+                    }
+
+                    // CardSlotTypeEnum.SWIPE -> {}
+
+                    else -> {
+                        showChargeError("Unsupported Card Type")
+                        return
+                    }
                 }
 
-                CardSlotTypeEnum.RF -> {
-                    transData.emvEntryModeEnum = EmvEntryModeEnum.EMV_ENTRY_MODE_CONTACTLESS
-                }
-
-                // CardSlotTypeEnum.SWIPE -> {}
-
-                else -> {
-                    showChargeError("Unsupported Card Type")
-                    return
-                }
+                emvHandler2.emvProcess(transData, this)
             }
-
-            emvHandler2.emvProcess(transData, this)
-        } else if (retCode == SdkResult.TimeOut) {
-            Log.e("payment", "TimeOut")
-            showChargeError("Card reading timeout, try again")
-        } else if (retCode == SdkResult.Fail) {
-            Log.e("payment", "Fail")
-            showChargeError("Fail reading card data")
-        } else {
-            Log.e("payment", "Error: $retCode")
-            showChargeError("Generic Error, retry")
+            SdkResult.TimeOut -> {
+                Log.e("payment", "TimeOut")
+                showChargeError("Card reading timeout, try again")
+            }
+            SdkResult.Fail -> {
+                Log.e("payment", "Fail")
+                showChargeError("Fail reading card data")
+            }
+            else -> {
+                Log.e("payment", "Error: $retCode")
+                showChargeError("Generic Error, retry")
+            }
         }
     }
 
