@@ -84,8 +84,6 @@ class PaymentActivity :
     private var total = ""
     private var desc = ""
     private var cardNumber = ""
-    private var pan = ""
-
     private var existSlot: CardSlotTypeEnum? = null
     private var cardReadingFinished = false
     private var cardAnimationFinished = false
@@ -179,6 +177,8 @@ class PaymentActivity :
 
     override fun onCardInfo(retCode: Int, cardInfo: CardInfoEntity) {
         Log.d("payment", "---onCardInfo---")
+
+        (application as AndroidApp).beep(BEEP_LENGTH)
 
         binding.askForCard.progress.animateProgress(CIRCLE_ANIMATION_LENGTH)
 
@@ -406,27 +406,6 @@ class PaymentActivity :
             "getEmvCardDataInfo: " + Gson().toJson(emvHandler2.emvCardDataInfo)
         )*/
 
-        // @todo handle errors
-        /*
-        when (retCode) {
-            SdkResult.Emv_Success_Arpc_Fail, SdkResult.Success, SdkResult.Emv_Script_Fail -> {}
-            SdkResult.Emv_Qpboc_Offline, SdkResult.Emv_Offline_Accept -> {}
-            SdkResult.Emv_Qpboc_Online -> {}
-            SdkResult.Emv_Candidatelist_Empty, SdkResult.Emv_FallBack -> {}
-            SdkResult.Emv_Arpc_Fail, SdkResult.Emv_Declined -> {}
-            SdkResult.Emv_Cancel -> {}
-            SdkResult.Emv_Offline_Declined -> {}
-            SdkResult.Emv_Card_Block -> {}
-            SdkResult.Emv_App_Block -> {}
-            SdkResult.Emv_App_Ineffect -> {}
-            SdkResult.Emv_App_Expired -> {}
-            SdkResult.Emv_Other_Interface -> {}
-            SdkResult.Emv_Plz_See_Phone -> {}
-            SdkResult.Emv_Terminate -> {}
-            else -> {}
-        }
-        */
-
         if (retCode == SdkResult.Success) {
             val tags = arrayOf(
                 // ── EMV Cryptography ───────────────────────────────────────────────────────
@@ -488,7 +467,21 @@ class PaymentActivity :
 
             charge()
         } else {
-            showChargeError("Payment failed")
+            // Handle errors display
+            var err = "Unknown"
+            if (retCode == SdkResult.Emv_Cancel) {
+                err = "Cancelled"
+            } else if (retCode == SdkResult.Emv_Declined || retCode == SdkResult.Emv_Offline_Declined) {
+                err = "Declined"
+            } else if (retCode == SdkResult.Emv_Card_Removed) {
+                err = "Card removed"
+            } else if (retCode == SdkResult.Emv_Card_Block) {
+                err = "Card blocked"
+            } else if (retCode == SdkResult.Emv_Candidatelist_Empty) {
+                err = "Invalid configuration"
+            } else if (retCode == SdkResult.Emv_Communicate_Timeout) err = "Timeout"
+
+            showChargeError("Error: $err")
         }
 
         emvHandler2.emvProcessAbort()
@@ -540,7 +533,6 @@ class PaymentActivity :
 
     private fun charge() = runOnUiThread {
         if (cardAnimationFinished && cardReadingFinished) {
-            (application as AndroidApp).beep(BEEP_LENGTH)
             binding.processing.root.isVisible = true
 //            binding.processing.loader.setOnClickListener {
 //                showChargeError("Error XYZ")

@@ -13,9 +13,6 @@ object Setup {
     const val test_deviceID = "testPOS"
     const val test_merchantID = "000000000000001"
 
-    const val validRAINcard = "4549880000080999"
-    const val validNonRAINcard = "4545454545454545"
-
     const val SEARCH_CARD_TIMEOUT = 5000
     const val BEEP_LENGTH = 500
     const val CIRCLE_ANIMATION_LENGTH = 300L
