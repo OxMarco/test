@@ -55,9 +55,10 @@ import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.EmvUtils
 import xyz.raincards.utils.Preferences
-import xyz.raincards.utils.Setup.BEEP_LENGTH
 import xyz.raincards.utils.Setup.CIRCLE_ANIMATION_LENGTH
+import xyz.raincards.utils.Setup.LONG_BEEP
 import xyz.raincards.utils.Setup.SEARCH_CARD_TIMEOUT
+import xyz.raincards.utils.Setup.SHORT_BEEP
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -180,12 +181,14 @@ class PaymentActivity :
         slotTypes.add(CardSlotTypeEnum.RF)
         cardReader.setSearchReader(ReaderTypeEnum.INNER)
         cardReader.searchCard(slotTypes, SEARCH_CARD_TIMEOUT, this)
+
+        (application as AndroidApp).beep(SHORT_BEEP)
     }
 
     override fun onCardInfo(retCode: Int, cardInfo: CardInfoEntity) {
         Log.d("payment", "---onCardInfo---")
 
-        (application as AndroidApp).beep(BEEP_LENGTH)
+        (application as AndroidApp).beep(LONG_BEEP)
 
         binding.askForCard.progress.animateProgress(CIRCLE_ANIMATION_LENGTH)
 
@@ -498,6 +501,7 @@ class PaymentActivity :
 
             val tlvData = emvHandler2.getTlvByTags(tags)
             Log.d("payment", "tlv data: $tlvData")
+            Log.d("payment", "interface: $existSlot")
 
 //            val tlv_5A = emvHandler2.getTlv(byteArrayOf(0x5A.toByte()), EmvDataSourceEnum.FROM_KERNEL)
 //            pan = ByteUtils.byteArray2HexString(tlv_5A)
@@ -522,6 +526,8 @@ class PaymentActivity :
                 err = "Use other card"
             } else if (retCode == SdkResult.Emv_Other_Interface) {
                 err = "Use other interface"
+            } else if (retCode == SdkResult.Emv_CTLS_TransTryAgain) {
+                err = "Try again"
             }
             showChargeError("Error: $err")
         }

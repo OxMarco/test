@@ -14,7 +14,8 @@ object Setup {
     const val test_merchantID = "000000000000001"
 
     const val SEARCH_CARD_TIMEOUT = 60000
-    const val BEEP_LENGTH = 500
+    const val SHORT_BEEP = 300
+    const val LONG_BEEP = 1000
     const val CIRCLE_ANIMATION_LENGTH = 300L
 
     private const val prodBaseURL = "https://api.raincards.xyz/v1/"
