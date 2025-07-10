@@ -2,14 +2,11 @@ package xyz.raincards.ui.main
 
 import android.os.Bundle
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.getValue
 import xyz.raincards.R
 import xyz.raincards.databinding.ActivityMainBinding
 import xyz.raincards.ui._base.BaseActivity
@@ -23,6 +20,7 @@ import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.Preferences
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
+import xyz.raincards.utils.extensions.openCalculator
 import xyz.raincards.utils.extensions.withCurrency
 import xyz.raincards.utils.navigation.GoTo
 
@@ -39,16 +37,6 @@ class MainActivity : BaseActivity() {
 
     private var desc = ""
     private var total = "0"
-
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            when {
-//                binding.askForCard.root.isVisible -> showCancelLayout()
-                binding.pinboard.root.isVisible -> finish()
-                else -> binding.pinboard.root.isVisible = true
-            }
-        }
-    }
 
     private val launcher = registerForActivityResult(StartActivityForResult()) { result ->
         when (result.resultCode) {
@@ -76,7 +64,7 @@ class MainActivity : BaseActivity() {
                 }
                 data.getStringExtra(EXTRA_TOTAL_WITH_TIP)?.let {
                     total = String.format(Locale.getDefault(), "%.2f", it.toDouble())
-                    binding.pinboard.amount.text = total.withCurrency()
+                    binding.amount.text = total.withCurrency()
                     openPaymentScreen()
                 }
             }
@@ -90,8 +78,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        onBackPressedDispatcher.addCallback(onBackPressedCallback)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -113,7 +99,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun showPinboard() {
-        binding.pinboard.apply {
+        binding.apply {
+            calculator.setOnClickListener { openCalculator() }
             chargeBtn.setOnClickListener {
                 if (total.toDouble() > 0) {
                     if (Preferences.isTipScreenOn()) {
@@ -147,16 +134,16 @@ class MainActivity : BaseActivity() {
 
     private fun updateDescText() {
         if (desc.isNotEmpty()) {
-            binding.pinboard.description.text = desc
+            binding.description.text = desc
         } else {
-            binding.pinboard.description.setText(R.string.add_description)
+            binding.description.setText(R.string.add_description)
         }
     }
 
     private fun updateAmountText() {
         val cents = if (inputDigits.isEmpty()) 0 else inputDigits.toString().toLong()
         total = String.format(Locale.getDefault(), "%.2f", cents / 100.0)
-        binding.pinboard.amount.text = total.withCurrency()
+        binding.amount.text = total.withCurrency()
     }
 
     private fun resetPinboard() {

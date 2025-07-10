@@ -12,7 +12,6 @@ import xyz.raincards.ui.main.MainActivity
 import xyz.raincards.ui.payment.PaymentActivity
 import xyz.raincards.ui.payment.error.PaymentErrorActivity
 import xyz.raincards.ui.payment.success.PaymentSuccessActivity
-import xyz.raincards.ui.qrcode.QRCodeActivity
 import xyz.raincards.ui.settings.SettingsActivity
 import xyz.raincards.ui.tip.TipActivity
 import xyz.raincards.utils.Constants.EXTRA_AMOUNT
@@ -99,16 +98,4 @@ class GoToImplementation @Inject constructor(private val activity: Activity) : G
             putExtra(EXTRA_AMOUNT, amount)
         }
     )
-
-    override fun qrCodeScreen(
-        launcher: ActivityResultLauncher<Intent>,
-        amount: String,
-        description: String
-    ) {
-        Intent(activity, QRCodeActivity::class.java).apply {
-            putExtra(EXTRA_DESCRIPTION, description)
-            putExtra(EXTRA_AMOUNT, amount)
-            activity.startActivity(this)
-        }
-    }
 }

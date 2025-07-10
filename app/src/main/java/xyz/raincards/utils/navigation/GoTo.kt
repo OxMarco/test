@@ -37,10 +37,4 @@ interface GoTo {
         amount: String,
         description: String
     )
-
-    fun qrCodeScreen(
-        launcher: ActivityResultLauncher<Intent>,
-        amount: String,
-        description: String
-    )
 }
