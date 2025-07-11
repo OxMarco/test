@@ -5,10 +5,8 @@ enum class BANK(
     val connectionType: String,
     val url: String
 ) {
-    RAIN("RAIN", "rest", "https://5edb-77-71-138-87.ngrok-free.app/v1/payment"),
-//    RAIN("RAIN", "rest", "https://api.raincards.xyz/v1/payment"), //prod version
-
-    CKB("CKB", "socket", "");
+    RAIN("RAIN", "rest", "https://5026-77-71-138-87.ngrok-free.app/v1/payment"),
+    DEFAULT("DEFAULT", "socket", "");
 
     companion object {
     }

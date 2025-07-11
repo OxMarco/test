@@ -23,6 +23,7 @@ import com.nexgo.oaf.apiv3.device.reader.CardSlotTypeEnum
 import com.nexgo.oaf.apiv3.device.reader.OnCardInfoListener
 import com.nexgo.oaf.apiv3.device.reader.ReaderTypeEnum
 import com.nexgo.oaf.apiv3.emv.CandidateAppInfoEntity
+import com.nexgo.oaf.apiv3.emv.EmvCardBrandEnum
 import com.nexgo.oaf.apiv3.emv.EmvDataSourceEnum
 import com.nexgo.oaf.apiv3.emv.EmvEntryModeEnum
 import com.nexgo.oaf.apiv3.emv.EmvHandler2
@@ -32,6 +33,7 @@ import com.nexgo.oaf.apiv3.emv.EmvProcessResultEntity
 import com.nexgo.oaf.apiv3.emv.EmvTransConfigurationEntity
 import com.nexgo.oaf.apiv3.emv.OnEmvProcessListener2
 import com.nexgo.oaf.apiv3.emv.PromptEnum
+import com.xinguodu.ddiinterface.Ddi
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
@@ -53,9 +55,10 @@ import xyz.raincards.utils.Constants.PAYMENT_ERROR
 import xyz.raincards.utils.Constants.PAYMENT_SUCCESS
 import xyz.raincards.utils.EmvUtils
 import xyz.raincards.utils.Preferences
-import xyz.raincards.utils.Setup.BEEP_LENGTH
 import xyz.raincards.utils.Setup.CIRCLE_ANIMATION_LENGTH
+import xyz.raincards.utils.Setup.LONG_BEEP
 import xyz.raincards.utils.Setup.SEARCH_CARD_TIMEOUT
+import xyz.raincards.utils.Setup.SHORT_BEEP
 import xyz.raincards.utils.TransactionType
 import xyz.raincards.utils.extensions.collectBaseEvents
 import xyz.raincards.utils.extensions.collectLifecycleFlow
@@ -84,8 +87,6 @@ class PaymentActivity :
     private var total = ""
     private var desc = ""
     private var cardNumber = ""
-    private var pan = ""
-
     private var existSlot: CardSlotTypeEnum? = null
     private var cardReadingFinished = false
     private var cardAnimationFinished = false
@@ -106,14 +107,17 @@ class PaymentActivity :
         (application as AndroidApp).closeRfSlot()
     }
 
-    private fun enableLogging() {
+    private fun logEmvProcess() {
         emvHandler2.emvDebugLog(true)
         LogUtils.setDebugEnable(true)
 
-        val path = getExternalFilesDir(null)!!.absolutePath + "/" + "sample_emvlog"
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+            .format(Date())
+        val filename = "emv_$timestamp.log"
+        val path = getExternalFilesDir(null)!!.absolutePath + "/" + filename
         val file = File(path)
         val z = file.isFile
-        println(z.toString())
+        Log.d("payment", path)
 
         try {
             Runtime.getRuntime().exec("logcat -v time -f $path")
@@ -138,8 +142,9 @@ class PaymentActivity :
         pinPad = (application as AndroidApp).pinPad
         cardReader = deviceEngine.cardReader
 
-        enableLogging()
         emvHandler2.emvDebugLog(true)
+        LogUtils.setDebugEnable(true)
+
         emvHandler2.initReader(ReaderTypeEnum.INNER, 0)
 
         val emvUtils = EmvUtils(this)
@@ -173,11 +178,16 @@ class PaymentActivity :
 
         slotTypes.add(CardSlotTypeEnum.ICC1)
         slotTypes.add(CardSlotTypeEnum.RF)
+        cardReader.setSearchReader(ReaderTypeEnum.INNER)
         cardReader.searchCard(slotTypes, SEARCH_CARD_TIMEOUT, this)
+
+        (application as AndroidApp).beep(SHORT_BEEP)
     }
 
     override fun onCardInfo(retCode: Int, cardInfo: CardInfoEntity) {
         Log.d("payment", "---onCardInfo---")
+
+        (application as AndroidApp).beep(LONG_BEEP)
 
         binding.askForCard.progress.animateProgress(CIRCLE_ANIMATION_LENGTH)
 
@@ -195,8 +205,8 @@ class PaymentActivity :
                 transData.emvTransType = TransactionType.SALE.code.toByte()
                 transData.countryCode = Country.MALTA.code.toString()
                 transData.currencyCode = Preferences.getSelectedCurrencyCode().toString()
-                transData.termId = "6177B523"
-                transData.merId = "2ISW1234567TEST"
+                transData.termId = "00000001"
+                transData.merId = "000000000000001"
                 transData.transDate =
                     SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
                 transData.transTime =
@@ -223,6 +233,14 @@ class PaymentActivity :
                 }
 
                 enableLogging()
+                emvHandler2.contactlessAppendAidIntoKernel(
+                    EmvCardBrandEnum.EMV_CARD_BRAND_MASTER,
+                    0x08.toByte(),
+                    ByteUtils.hexString2ByteArray("A000000732100123")
+                )
+
+                logEmvProcess()
+
                 emvHandler2.emvProcess(transData, this)
             }
             SdkResult.TimeOut -> {
@@ -267,20 +285,34 @@ class PaymentActivity :
         Log.d("payment", "---onTransInitBeforeGPO---")
 
         val aid = emvHandler2.getTlv(byteArrayOf(0x4F), EmvDataSourceEnum.FROM_KERNEL)
-        if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
-            .contains("A000000004")
-        ) {
-            emvHandler2.setTlv(
-                byteArrayOf(0x9F.toByte(), 0x33.toByte()),
-                byteArrayOf(0xE0.toByte(), 0xF8.toByte(), 0xC8.toByte())
-            )
-        } else {
-            emvHandler2.setTlv(
-                byteArrayOf(0x9F.toByte(), 0x33.toByte()),
-                byteArrayOf(0xE0.toByte(), 0xF8.toByte(), 0xC8.toByte())
-            )
+        if (existSlot == CardSlotTypeEnum.RF) {
+            if (aid != null) {
+                if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
+                    .contains("A000000004")
+                ) {
+                    // Paypass
+                    configPaypassParameter(aid)
+                } else if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
+                    .contains("A000000003")
+                ) {
+                    // Paywave
+                    configPaywaveParameters()
+                } else if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
+                    .contains("A000000025")
+                ) {
+                    // ExpressPay
+                    configExpressPayParameter()
+                } else if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
+                    .contains("A000000541")
+                ) {
+                    configPureContactlessParameter()
+                } else if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
+                    .contains("A000000065")
+                ) {
+                    configJcbContactlessParameter()
+                }
+            }
         }
-        emvHandler2.setPureKernelCapab(ByteUtils.hexString2ByteArray("3400400A99"))
         emvHandler2.onSetTransInitBeforeGPOResponse(true)
     }
 
@@ -350,6 +382,7 @@ class PaymentActivity :
         // 8a = tag, 02 = len, 3030 = value
         emvOnlineResult.recvField55 = null
         emvHandler2.onSetOnlineProcResponse(SdkResult.Success, emvOnlineResult)
+        val ret = Ddi.ddi_write_custom_info(10, byteArrayOf(0), 1)
     }
 
     override fun onPrompt(promptEnum: PromptEnum?) {
@@ -413,27 +446,6 @@ class PaymentActivity :
             "getEmvCardDataInfo: " + Gson().toJson(emvHandler2.emvCardDataInfo)
         )*/
 
-        // @todo handle errors
-        /*
-        when (retCode) {
-            SdkResult.Emv_Success_Arpc_Fail, SdkResult.Success, SdkResult.Emv_Script_Fail -> {}
-            SdkResult.Emv_Qpboc_Offline, SdkResult.Emv_Offline_Accept -> {}
-            SdkResult.Emv_Qpboc_Online -> {}
-            SdkResult.Emv_Candidatelist_Empty, SdkResult.Emv_FallBack -> {}
-            SdkResult.Emv_Arpc_Fail, SdkResult.Emv_Declined -> {}
-            SdkResult.Emv_Cancel -> {}
-            SdkResult.Emv_Offline_Declined -> {}
-            SdkResult.Emv_Card_Block -> {}
-            SdkResult.Emv_App_Block -> {}
-            SdkResult.Emv_App_Ineffect -> {}
-            SdkResult.Emv_App_Expired -> {}
-            SdkResult.Emv_Other_Interface -> {}
-            SdkResult.Emv_Plz_See_Phone -> {}
-            SdkResult.Emv_Terminate -> {}
-            else -> {}
-        }
-        */
-
         if (retCode == SdkResult.Success) {
             val tags = arrayOf(
                 // ── EMV Cryptography ───────────────────────────────────────────────────────
@@ -489,13 +501,35 @@ class PaymentActivity :
 
             val tlvData = emvHandler2.getTlvByTags(tags)
             Log.d("payment", "tlv data: $tlvData")
+            Log.d("payment", "interface: $existSlot")
 
 //            val tlv_5A = emvHandler2.getTlv(byteArrayOf(0x5A.toByte()), EmvDataSourceEnum.FROM_KERNEL)
 //            pan = ByteUtils.byteArray2HexString(tlv_5A)
 
             charge()
         } else {
-            showToast("Payment failed")
+            // Handle errors display
+            var err = "Unknown"
+            if (retCode == SdkResult.Emv_Cancel) {
+                err = "Cancelled"
+            } else if (retCode == SdkResult.Emv_Declined || retCode == SdkResult.Emv_Offline_Declined) {
+                err = "Declined"
+            } else if (retCode == SdkResult.Emv_Card_Removed) {
+                err = "Card removed"
+            } else if (retCode == SdkResult.Emv_Card_Block) {
+                err = "Card blocked"
+            } else if (retCode == SdkResult.Emv_Candidatelist_Empty) {
+                err = "Invalid configuration"
+            } else if (retCode == SdkResult.Emv_Communicate_Timeout) {
+                err = "Timeout"
+            } else if (retCode == SdkResult.Emv_USE_OTHER_CARD) {
+                err = "Use other card"
+            } else if (retCode == SdkResult.Emv_Other_Interface) {
+                err = "Use other interface"
+            } else if (retCode == SdkResult.Emv_CTLS_TransTryAgain) {
+                err = "Try again"
+            }
+            showToast("Error: $err")
         }
 
         emvHandler2.emvProcessAbort()
@@ -547,7 +581,6 @@ class PaymentActivity :
 
     private fun charge() = runOnUiThread {
         if (cardAnimationFinished && cardReadingFinished) {
-            (application as AndroidApp).beep(BEEP_LENGTH)
             binding.processing.root.isVisible = true
 //            binding.processing.loader.setOnClickListener {
 //                showChargeError("Error XYZ")
@@ -558,10 +591,8 @@ class PaymentActivity :
             binding.askForCard.progress.stopAnimating()
 
             viewModel.charge(
-//                validRAINcard,
                 cardNumber,
                 total,
-//                pan,
                 desc.ifEmpty { "empty" }
             )
         }
@@ -573,5 +604,112 @@ class PaymentActivity :
         animator.repeatCount = ObjectAnimator.INFINITE
         animator.interpolator = AccelerateDecelerateInterpolator()
         animator.start()
+    }
+
+    // config
+    private fun configPaywaveParameters() {
+//        byte[] TTQ ;
+//        byte[] kernelTTQ = emvHandler2.getTlv(ByteUtils.hexString2ByteArray("9F66"), EmvDataSourceEnum.FROM_KERNEL);
+//        Log.d("nexgo",  "configPaywaveParameters, TTQ" + ByteUtils.byteArray2HexString(kernelTTQ));
+//        //default TTQ value
+//        TTQ = ByteUtils.hexString2ByteArray("36004000");
+//        kernelTTQ[0] = TTQ[0];
+//        kernelTTQ[2] = TTQ[2];
+//        kernelTTQ[3] = TTQ[3];
+//
+//        // FIXME: 2019/3/20
+//        //If there is no special requirements, do not change TTQ byte1
+//        //if online force required , can set byte2 bit 8 = 1
+//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("9F66"), kernelTTQ);
+    }
+
+    private fun configPaypassParameter(aid: ByteArray) {
+        // kernel configuration, enable RRP and cdcvm
+        emvHandler2.setTlv(
+            byteArrayOf(0xDF.toByte(), 0x81.toByte(), 0x1B.toByte()),
+            byteArrayOf(0x30.toByte())
+        )
+
+        // EMV MODE :amount >contactless cvm limit, set 60 = online pin and signature
+        emvHandler2.setTlv(
+            byteArrayOf(0xDF.toByte(), 0x81.toByte(), 0x18.toByte()),
+            byteArrayOf(0x60.toByte())
+        )
+        // EMV mode :amount < contactless cvm limit, set 08 = no cvm
+        emvHandler2.setTlv(
+            byteArrayOf(0xDF.toByte(), 0x81.toByte(), 0x19.toByte()),
+            byteArrayOf(0x08.toByte())
+        )
+
+        emvHandler2.setTlv(
+            byteArrayOf(0xDF.toByte(), 0x81.toByte(), 0x25.toByte()),
+            ByteUtils.hexString2ByteArray("000999999999")
+        )
+
+        if (ByteUtils.byteArray2HexString(aid).uppercase(Locale.getDefault())
+            .contains("A0000000043060")
+        ) {
+            Log.d("nexgo", "======maestro===== ")
+            // maestro only support online pin
+            emvHandler2.setTlv(
+                byteArrayOf(0x9F.toByte(), 0x33.toByte()),
+                byteArrayOf(0xE0.toByte(), 0x40.toByte(), 0xC8.toByte())
+            )
+            emvHandler2.setTlv(
+                byteArrayOf(0xDF.toByte(), 0x81.toByte(), 0x18.toByte()),
+                byteArrayOf(0x40.toByte())
+            )
+            emvHandler2.setTlv(
+                byteArrayOf(0xDF.toByte(), 0x81.toByte(), 0x19.toByte()),
+                byteArrayOf(0x08.toByte())
+            )
+
+            // set 9F1D terminal risk management - Maestro. it should be same with the MTIP configuration for 9F1D
+            emvHandler2.setTlv(
+                byteArrayOf(0x9F.toByte(), 0x1d.toByte()),
+                ByteUtils.hexString2ByteArray("4C00800000000000")
+            )
+        } else {
+            // set 9F1D terminal risk management - MasterCard. it should be same with the MTIP configuration for 9F1D
+            emvHandler2.setTlv(
+                byteArrayOf(0x9F.toByte(), 0x1d.toByte()),
+                ByteUtils.hexString2ByteArray("6C00800000000000")
+            )
+        }
+    }
+
+    private fun configExpressPayParameter() {
+        val kernelTTC = emvHandler2.getTlv(
+            ByteUtils.hexString2ByteArray("9F6E"),
+            EmvDataSourceEnum.FROM_KERNEL
+        )
+
+        // set terminal capability...
+        val TTC = ByteUtils.hexString2ByteArray("D8C00000")
+        kernelTTC[1] = TTC[1]
+
+        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("9F6E"), kernelTTC)
+
+        //
+//        //TacDefault
+//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8120"), ByteUtils.hexString2ByteArray("fc50b8a000"));
+//
+//        //TacDecline
+//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8121"), ByteUtils.hexString2ByteArray("0000000000"));
+//
+//        //TacOnline
+//        emvHandler2.setTlv(ByteUtils.hexString2ByteArray("DF8122"), ByteUtils.hexString2ByteArray("fc50808800"));
+    }
+
+    private fun configPureContactlessParameter() {
+        Log.d("nexgo", "configPureContactlessParameter")
+
+        //        emvHandler2.setPureKernelCapab(ByteUtils.hexString2ByteArray("3400400A99"));
+    }
+
+    private fun configJcbContactlessParameter() {
+        Log.d("nexgo", "configJcbContactlessParameter")
+
+        // emvHandler2.setTlv(ByteUtils.hexString2ByteArray("9F52"), ByteUtils.hexString2ByteArray("03"));
     }
 }

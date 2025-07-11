@@ -12,16 +12,13 @@ object Setup {
 
     const val test_deviceID = "testPOS"
     const val test_merchantID = "000000000000001"
-
-    const val validRAINcard = "4549880000080999"
-    const val validNonRAINcard = "4545454545454545"
-
     const val SEARCH_CARD_TIMEOUT = 60000
-    const val BEEP_LENGTH = 500
+    const val SHORT_BEEP = 300
+    const val LONG_BEEP = 1000
     const val CIRCLE_ANIMATION_LENGTH = 300L
 
     private const val prodBaseURL = "https://api.raincards.xyz/v1/"
-    private const val devBaseURL = "https://a8f0-46-11-32-112.ngrok-free.app/v1/"
+    private const val devBaseURL = "https://5026-77-71-138-87.ngrok-free.app/v1/"
 
     val BASE_URL = if (BuildConfig.IS_DEV) devBaseURL else prodBaseURL
 

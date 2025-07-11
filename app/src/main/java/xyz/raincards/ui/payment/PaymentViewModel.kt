@@ -44,11 +44,11 @@ class PaymentViewModel @Inject constructor(
                 )
             }
 
-            BANK.CKB -> {
-                println("-----start socket connection to CKB")
+            BANK.DEFAULT -> {
+                println("-----start socket connection to acquirer")
                 // socket connection
 
-                _eventChannel.send(Event.ChargeError("Connection to CKB not yet implemented"))
+                _eventChannel.send(Event.ChargeError("Connection to acquirer not yet implemented"))
             }
         }
 

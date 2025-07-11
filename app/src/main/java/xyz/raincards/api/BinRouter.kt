@@ -24,7 +24,7 @@ object BinRouter {
 
     fun getBank(cardN: String): BANK {
         val bin = cardN.substring(0, 8)
-        val issuer = lookupIssuer(bin.toInt()) ?: BANK.CKB
+        val issuer = lookupIssuer(bin.toInt()) ?: BANK.DEFAULT
 
         return issuer
     }

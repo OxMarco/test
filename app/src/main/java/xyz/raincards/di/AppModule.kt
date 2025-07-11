@@ -50,11 +50,4 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiOnboarding(retrofit: Retrofit): Api = retrofit.create(Api::class.java)
-
-//    @Provides
-//    @Singleton
-//    fun provideDatabase(app: Application): AppDatabase = Room
-//        .databaseBuilder(app, AppDatabase::class.java, "zenna_db")
-//        .fallbackToDestructiveMigration()
-//        .build()
 }
