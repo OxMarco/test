@@ -1,6 +1,7 @@
 package xyz.raincards.utils.extensions
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -61,5 +62,43 @@ fun Activity.openAndroidSettings() {
     Intent(Settings.ACTION_SETTINGS).apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(this)
+    }
+}
+
+fun Activity.openCalculator() {
+    val intent = Intent()
+    intent.action = Intent.ACTION_MAIN
+    intent.addCategory(Intent.CATEGORY_APP_CALCULATOR)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+    try {
+        startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        // Fallback: try known calculator package names
+        val calculatorPackages = listOf(
+            "com.android.calculator2", // AOSP
+            "com.sec.android.app.popupcalculator", // Samsung
+            "com.miui.calculator", // Xiaomi
+            "com.oneplus.calculator", // OnePlus
+            "com.google.android.calculator" // Google Pixel
+        )
+
+        var launched = false
+        for (pkg in calculatorPackages) {
+            try {
+                val launchIntent = packageManager.getLaunchIntentForPackage(pkg)
+                if (launchIntent != null) {
+                    startActivity(launchIntent)
+                    launched = true
+                    break
+                }
+            } catch (e: Exception) {
+                // Ignore and try next
+            }
+        }
+
+        if (!launched) {
+            Toast.makeText(this, "Calculator app not found.", Toast.LENGTH_SHORT).show()
+        }
     }
 }

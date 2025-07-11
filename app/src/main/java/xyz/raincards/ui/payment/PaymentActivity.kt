@@ -155,7 +155,6 @@ class PaymentActivity :
 
         binding.askForCard.apply {
             trash.setOnClickListener { goTo.cancelPaymentScreen(launcher) }
-            qrCode.setOnClickListener { goTo.qrCodeScreen(launcher, total, desc) }
             amount.text = total.withCurrency()
             progress.setCustomListener(object : CustomProgressView.Listener {
                 override fun onAnimationFinished() {
@@ -194,7 +193,7 @@ class PaymentActivity :
 
         when (retCode) {
             SdkResult.Success -> {
-                cardReader.stopSearch()
+//              //  cardReader.stopSearch()
 
                 existSlot = cardInfo.cardExistslot
 
@@ -228,11 +227,12 @@ class PaymentActivity :
                     // CardSlotTypeEnum.SWIPE -> {}
 
                     else -> {
-                        showChargeError("Unsupported Card Type")
+                        showToast("Unsupported Card Type")
                         return
                     }
                 }
 
+                enableLogging()
                 emvHandler2.contactlessAppendAidIntoKernel(
                     EmvCardBrandEnum.EMV_CARD_BRAND_MASTER,
                     0x08.toByte(),
@@ -245,15 +245,15 @@ class PaymentActivity :
             }
             SdkResult.TimeOut -> {
                 Log.e("payment", "TimeOut")
-                showChargeError("Card reading timeout, try again")
+                showToast("Card reading timeout, try again")
             }
             SdkResult.Fail -> {
                 Log.e("payment", "Fail")
-                showChargeError("Fail reading card data")
+                showToast("Fail reading card data")
             }
             else -> {
                 Log.e("payment", "Error: $retCode")
-                showChargeError("Generic Error, retry")
+                showToast("Generic Error, retry")
             }
         }
     }
@@ -529,7 +529,7 @@ class PaymentActivity :
             } else if (retCode == SdkResult.Emv_CTLS_TransTryAgain) {
                 err = "Try again"
             }
-            showChargeError("Error: $err")
+            showToast("Error: $err")
         }
 
         emvHandler2.emvProcessAbort()

@@ -12,7 +12,6 @@ object Setup {
 
     const val test_deviceID = "testPOS"
     const val test_merchantID = "000000000000001"
-
     const val SEARCH_CARD_TIMEOUT = 60000
     const val SHORT_BEEP = 300
     const val LONG_BEEP = 1000
